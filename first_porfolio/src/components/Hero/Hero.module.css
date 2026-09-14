@@ -129,7 +129,7 @@ body{
        Ultra/Bevan (the new --font-thick fallbacks) set much wider glyphs
        than Recoleta Alt at that same size, which is what pushed this from
        "a bit tight" to actually clipping on phones. */
-    font-size: clamp(2.2rem, 9vw, 8.5rem);
+    font-size: clamp(2.6rem, 9vw, 8.5rem);
 }
 .toMy{
     position: relative;
@@ -138,7 +138,7 @@ body{
     display: flex;
     justify-content: flex-end;
     line-height: 0.8;
-    font-size: clamp(2.2rem, 9vw, 8.5rem);
+    font-size: clamp(2.6rem, 9vw, 8.5rem);
 }
 
 .soup_image{
@@ -475,6 +475,20 @@ body{
         width: 160px;
         height: 52px;
         font-size: 16px;
+    }
+    /* The 420px min-height above (shared with the >=1024px row layout) was
+       sized for the desktop headline's full 8.5rem size. On an actual
+       phone the clamp() floor holds "Welcome"/"to my" much smaller, so
+       that same fixed floor just reserved a lot of dead space below the
+       text before the bowl started -- shrinking it here pulls the bowl
+       up closer underneath the headline. Kept well above 0 (rather than
+       auto) since .soup_image's own upward pull (margin-top:-20% + the
+       transform below) still needs somewhere to land without climbing
+       over the text -- measured empirically against real phone widths
+       (320-480px) rather than derived, since that pull's cqw/% terms
+       don't scale in step with .content's own height. */
+    .content{
+        min-height: 260px;
     }
 }
 
