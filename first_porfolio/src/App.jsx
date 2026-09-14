@@ -13,9 +13,11 @@ import { ProjectPage } from './components/ProjectPage/ProjectPage';
 import { DesignPage } from './components/DesignPage/DesignPage';
 import { Gallery } from './components/Gallery/Gallery';
 import { Receipt } from './components/Receipt/Receipt';
+import { MobileWarning } from './components/MobileWarning/MobileWarning';
 
 const PROJECT_COUNT = 4;
 const DESIGN_COUNT = 3;
+const SMALL_SCREEN_QUERY = '(max-width: 768px)';
 
 // Which project page (if any) the URL hash points at: #project/1 .. #project/4.
 function readProjectHash() {
@@ -61,6 +63,20 @@ function App() {
     openProject !== null || openDesign !== null || openGallery || openReceipt
   );
 
+  // Small-screen notice: this site isn't designed for phone-sized viewports,
+  // so warn and let the visitor opt in to continuing anyway.
+  const [isSmallScreen, setIsSmallScreen] = useState(
+    () => window.matchMedia(SMALL_SCREEN_QUERY).matches
+  );
+  const [smallScreenAcknowledged, setSmallScreenAcknowledged] = useState(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia(SMALL_SCREEN_QUERY);
+    const onChange = (e) => setIsSmallScreen(e.matches);
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
+
   // Mirror the open overlay into the URL hash. Opening (from nothing) pushes a
   // history entry so the browser Back button closes it; switching pages or
   // closing just replaces it, so arrow-key navigation doesn't pile up history.
@@ -94,6 +110,10 @@ function App() {
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
+
+  if (isSmallScreen && !smallScreenAcknowledged) {
+    return <MobileWarning onContinue={() => setSmallScreenAcknowledged(true)} />;
+  }
 
   return <div className={styles.App}>
     <Hero />

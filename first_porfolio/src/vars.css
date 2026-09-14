@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Pixelify+Sans:wght@400..700&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Pixelify+Sans:wght@400..700&family=Raleway:ital,wght@0,100..900;1,100..900&family=Ultra&family=Bevan:ital@0;1&display=swap');
 
 :root{
     /* Colours */
@@ -14,7 +14,7 @@
     --dark-blue: #414B9E;
 
     /*Fonts*/
-    --font-thick: 'Recoleta Alt';
+    --font-thick: 'Recoleta Alt', 'Ultra', 'Bevan';
     --font-thin: 'Raleway', Helvetica;
     --font-size: 3.8vh;
 
