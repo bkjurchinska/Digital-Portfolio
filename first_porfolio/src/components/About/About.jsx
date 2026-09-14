@@ -12,7 +12,7 @@ import Cracker2 from '../../assets/biscuit2.png';
 import Olive1 from '../../assets/olive1.png';
 import Olive2 from '../../assets/olive2.png';
 import Olive3 from '../../assets/olive3.png';
-import Fig from '../../assets/fig.png';
+import Fig from '../../assets/Fig.png';
 import TomatoStem from '../../assets/tomato-stem.png';
 import Tomato1 from '../../assets/tomato1.png';
 import Tomato2 from '../../assets/tomato2.png';
