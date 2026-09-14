@@ -1,0 +1,18 @@
+@import '../../vars.css';
+
+.container{
+    display: flex;
+    flex-direction: column;
+    width: 95%;
+    /* background-color: aquamarine; */
+}
+
+.title{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    color: var(--color-text);
+    margin-left: 5%;
+    font-size: 5vw;
+}

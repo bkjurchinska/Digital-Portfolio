@@ -1,0 +1,267 @@
+@import "../../vars.css";
+
+/* NOTE: don't put bare `html, body` (or any other unscoped element)
+   selectors in a CSS module -- unlike class selectors, they aren't
+   hashed/scoped, so they'd apply to the whole document the instant this
+   file is imported, whether or not <Menu /> is actually rendered. That's
+   what silently broke wheel/trackpad scrolling site-wide the last time this
+   file had one. Keep every rule below anchored to a .className from this
+   file. */
+
+.container {
+    width: 100%;
+    padding: 12vh 5% 6vh;
+    scroll-margin-top: 3vh;   /* don't jam against the top on the #menu jump */
+    display: flex;
+    justify-content: center;
+}
+
+.card {
+    /* Beige paper cover, maroon text -- tokens scoped to .card so they never
+       leak past this component. --maroon/--beige come from vars.css, the
+       same tokens the Hero section uses, so the colour matches site-wide. */
+    --ink: var(--maroon);
+    --ink-soft: rgba(133, 39, 54, 0.78);
+    --accent: var(--maroon);
+    --hairline: rgba(133, 39, 54, 0.28);
+
+    width: min(1080px, 100%);
+    background-color: var(--beige);
+    background-image: url('../../assets/menu_texturePaper.svg');
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: multiply;
+    border-radius: 5px;
+    padding: 4vh 4.5%;
+    /* box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22); */
+}
+
+.header {
+    margin-bottom: 2.6vh;
+}
+
+.eyebrow {
+    font-family: var(--font-thin);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    color: var(--accent);
+    margin: 0 0 0.4em;
+}
+
+.title {
+    font-family: var(--font-thick), serif;
+    font-size: clamp(2rem, 4.2vw, 2.8rem);
+    color: var(--ink);
+    margin: 0;
+}
+
+/* Mood picker -- sits full-width right under the title, above the columns. */
+.mood {
+    background-color: var(--lighter-beige);
+    border-radius: 16px;
+    padding: 2vh 3%;
+    margin: 3.4vh auto 0;
+    width: 64.6vw;
+    /* box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); */
+}
+
+.moodEyebrow {
+    font-family: var(--font-thin);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    color: var(--maroon);
+    margin: 0 0 0.4em;
+}
+
+.moodTitle {
+    font-family: var(--font-thick), serif;
+    font-size: clamp(1.2rem, 2.4vw, 1.6rem);
+    color: var(--maroon);
+    margin: 0 0 0.8em;
+}
+
+.moodPills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6em;
+    margin-bottom: 1.2em;
+}
+
+.moodPill {
+    font-family: var(--font-thin);
+    font-weight: 700;
+    font-size: clamp(0.8rem, 1.4vw, 0.95rem);
+    color: var(--maroon);
+    background-color: var(--lighter-beige);
+    border: 2px solid var(--maroon);
+    border-radius: 999px;
+    padding: 0.5em 1.2em;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.moodPill:hover,
+.moodPill:focus-visible {
+    background-color: var(--maroon);
+    color: var(--lighter-beige);
+    outline: none;
+}
+
+.moodPillActive {
+    background-color: var(--maroon);
+    border-color: var(--maroon);
+    color: var(--lighter-beige);
+}
+
+.moodPillActive:hover,
+.moodPillActive:focus-visible {
+    background-color: var(--maroon);
+    color: var(--lighter-beige);
+}
+
+.moodDivider {
+    display: block;
+    border-top: 1.5px dashed rgba(133, 39, 54, 0.35);
+    margin: 0 0 1em;
+}
+
+.moodRoute {
+    font-family: var(--font-thin);
+    font-size: clamp(0.8rem, 1.4vw, 0.95rem);
+    color: var(--maroon);
+    margin: 0;
+}
+
+.moodRoute strong {
+    color: var(--maroon);
+    text-decoration: underline;
+    text-decoration-style: dotted;
+}
+
+/* The two facing "pages" of items. */
+.columns {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 4%;
+}
+
+.colDivider {
+    width: 1px;
+    /* background-color: var(--hairline); */
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 3vh;
+    min-width: 0;
+}
+
+.course {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.courseHeader {
+    display: flex;
+    align-items: baseline;
+    gap: 0.8em;
+}
+
+.courseLabel {
+    font-family: var(--font-thin);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: clamp(1rem, 2vw, 0.9rem);
+    color: var(--lighter-beige);
+    white-space: nowrap;
+}
+
+.courseRule {
+    flex: 1;
+    align-self: center;
+    border-top: 1.5px solid var(--hairline);
+}
+
+/* Every item -- whether it used to be a top-level section or a
+   subsection -- gets exactly the same treatment: title + dotted leader +
+   marker, blurb underneath. */
+.item {
+    display: block;
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 0.3em 0.4em;
+    margin: 0 -0.4em;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.15s ease, opacity 0.2s ease;
+}
+
+.item:hover,
+.item:focus-visible {
+    background-color: rgba(133, 39, 54, 0.08);
+    outline: none;
+}
+
+.itemDim {
+    opacity: 0.38;
+}
+
+.itemTop {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5em;
+}
+
+.itemTitle {
+    font-family: var(--font-thick), serif;
+    font-size: clamp(1rem, 1.8vw, 1.15rem);
+    color: var(--ink);
+}
+
+.leader {
+    flex: 1;
+    align-self: center;
+    border-bottom: 2px dotted var(--hairline);
+}
+
+.itemMarker {
+    font-family: var(--font-thin);
+    font-weight: 700;
+    font-size: clamp(0.75rem, 1.3vw, 0.85rem);
+    color: var(--accent);
+    white-space: nowrap;
+}
+
+.itemBlurb {
+    display: block;
+    font-family: var(--font-thin);
+    font-size: clamp(0.8rem, 1.4vw, 0.92rem);
+    color: var(--ink-soft);
+    margin-top: 0.3em;
+    line-height: 1.4;
+    font-weight: 600;
+}
+
+@media (max-width: 760px) {
+    .columns {
+        grid-template-columns: 1fr;
+        gap: 3.4vh;
+    }
+
+    .colDivider {
+        display: none;
+    }
+
+    .card {
+        padding: 4vh 6%;
+    }
+}

@@ -1,0 +1,13 @@
+.svg{
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;   /* let the glossy filter's soft shadow spill past the box */
+}
+
+/* Cursor-tracked light layer -- starts invisible, fades in while hovering. */
+.cursorGlow{
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+}

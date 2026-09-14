@@ -1,0 +1,825 @@
+@import '../../vars.css';
+
+/* --accent is set per project via inline style on .backdrop */
+.backdrop{
+    position: fixed;
+    inset: 0;
+    z-index: 4000;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    background: var(--color-background, #faf9f6);
+    /* color: var(--maroon, #852736); */
+    color: var(--accent);
+    font-family: var(--font-thin, 'Raleway', Helvetica, sans-serif);
+    animation: pageIn 0.35s ease;
+}
+.backdrop::-webkit-scrollbar{ display: none; }
+@keyframes pageIn{
+    from{ opacity: 0; transform: translateY(1.4rem); }
+    to  { opacity: 1; transform: translateY(0); }
+}
+
+.inner{
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 6rem 1.5vw 14vh;   /* top pad clears the fixed .header */
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+}
+
+/* Top bar: the four projects as a plain text list, no toast thumbnails.
+   Click one to jump to that page; the current one is highlighted. */
+.header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 4001;
+    display: flex;
+    align-items: baseline;
+    gap: 2.4rem;
+    padding: 1.4rem 7rem 1.4rem 3vw;   /* left aligns with .inner; right pad keeps clear of .close */
+    background: var(--color-background, #faf9f6);
+    border-bottom: 2px solid rgba(133, 39, 54, 0.12);
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+}
+.header::-webkit-scrollbar{ display: none; }
+.headerItem{
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex: 0 0 auto;
+    padding: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-thin, 'Raleway', Helvetica, sans-serif);
+    font-size: 1rem;
+    /* color: var(--maroon); */
+    /* background-color: var(--maroon); */
+    border: var(--accent) 3px solid;
+    border-radius: 20px;
+    padding: 5px;
+    opacity: 0.4;
+    transition: opacity 0.2s ease;
+}
+.headerItem:hover{ opacity: 0.75; }
+.headerNum{
+    /* font-family: 'Geist Mono', 'Courier New', ui-monospace, monospace; */
+    font-size: 0.8rem;
+    font-family: var(--font-thin), Helvetica;
+    letter-spacing: 0.1em;
+    color: var(--beige);
+}
+.headerActive{
+    opacity: 1;
+    background-color: var(--accent);
+    color: var(--beige);
+}
+.headerActive .headerNum{
+    color: var(--beige);
+}
+.headerActive .headerName{
+    /* text-decoration: underline; */
+    /* text-underline-offset: 4px;
+    text-decoration-color: var(--accent); */
+    color: var(--accent0);
+}
+
+.close{
+    position: fixed;
+    top: 2.2vh;
+    right: 2.6vw;
+    z-index: 4002;
+    width: 3rem;
+    height: 3rem;
+    display: grid;
+    place-items: center;
+    place-content: center;   /* centre the single cell in the circle, not just its contents */
+    border-radius: 50%;
+    border: 2px solid currentColor;
+    background: transparent;
+    color: var(--accent);
+    font-size: 0;   /* hide the ✕ glyph; the X below is drawn dead-centre instead */
+    line-height: 1;
+    cursor: pointer;
+    transition: transform 0.25s ease, background 0.2s ease, border-color 0.2s ease;
+}
+/* Two bars stacked in the same grid cell -> a perfectly centred X. */
+.close::before,
+.close::after{
+    content: '';
+    grid-area: 1 / 1;
+    width: 1.1rem;
+    height: 2px;
+    border-radius: 1px;
+    background: currentColor;
+}
+.close::before{ transform: rotate(45deg); }
+.close::after{ transform: rotate(-45deg); }
+.close:hover{
+    transform: rotate(90deg) scale(1.06);
+    background: var(--accent);
+    color: var(--beige);
+    border-color: transparent;   /* border vanishes on hover */
+}
+
+.eyebrow{
+    margin: 0;
+    font-family: 'Geist Mono', 'Courier New', ui-monospace, monospace;
+    font-size: 0.9rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+
+.title{
+    margin: 0;
+    font-family: var(--font-thick, 'Recoleta Alt', Georgia, serif);
+    font-size: clamp(2.6rem, 8vw, 5.5rem);
+    line-height: 1.03;
+    color: var(--accent);
+}
+
+/* "Book Tracker" is still just plans on paper -- fills the empty spot where
+   the main image would normally sit, with a small, honest progress readout
+   instead of pretending it's further along. */
+.progress{
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.9rem;
+    padding: 0 15%;
+    border: 2px dashed var(--accent);
+    border-radius: 1rem;
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+.progressLabel{
+    font-family: 'Geist Mono', 'Courier New', ui-monospace, monospace;
+    font-size: 0.95rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+.progressTrack{
+    width: 100%;
+    height: 8px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--accent) 16%, transparent);
+    overflow: hidden;
+}
+.progressFill{
+    height: 100%;
+    border-radius: 999px;
+    background: var(--accent);
+}
+.tagline{
+    margin: 0;
+    /* font-size: clamp(1rem, 2.4vw, 1.35rem); */
+    font-size: 3.5vh;
+    opacity: 0.7;
+    color: var(--accent);
+}
+.tagline, .body{
+    font-family: var(--font-thin), Helvetica;
+}
+
+/* Two columns: all the text on the left, an image placeholder on the right. */
+.content{
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 4rem;
+    align-items: start;
+}
+.left{
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+    min-width: 0;
+}
+.right{
+    position: sticky;
+    top: 8rem;
+}
+.imagePlaceholder{
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    display: grid;
+    place-items: center;
+    border: 2px dashed var(--accent);
+    border-radius: 1rem;
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    color: var(--accent);
+    font-family: 'Geist Mono', 'Courier New', ui-monospace, monospace;
+    font-size: 0.95rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+.mainImage{
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: contain;
+    border-radius: 1rem;
+    padding-top: 5vh;
+    /* background: color-mix(in srgb, var(--accent) 10%, transparent); */
+}
+.mainImageLarge{
+    width: 118%;
+    margin-left: -9%;
+}
+/* 2D Game page: larger main image, no letterboxing so the rounded corners
+   actually clip the artwork. */
+.mainImageGame{
+    width: 128%;
+    margin-left: -14%;
+    aspect-ratio: auto;
+    object-fit: contain;
+    padding-top: 0;
+    border-radius: 1.6rem;
+}
+
+.tools{
+    align-self: flex-start;
+    margin: 0;
+    padding: 0.85rem 1.1rem;
+    border: 2px solid var(--accent);
+    border-radius: 0.8rem;
+    font-family: 'Geist Mono', 'Courier New', ui-monospace, monospace;
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+}
+
+.body{
+    margin: 0;
+    max-width: 46ch;
+    /* font-size: clamp(1.05rem, 2.6vw, 1.45rem); */
+    font-size: 3vh;
+    line-height: 1.65;
+}
+
+/* Shared small uppercase label used above the .why / .how headings,
+   echoing .eyebrow above the page title. */
+.sectionEyebrow{
+    margin: 0 0 0.4rem;
+    font-family: 'Geist Mono', 'Courier New', ui-monospace, monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    opacity: 0.6;
+}
+
+.intro{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 3.5rem;
+    margin-top: 2.5rem;
+    padding-top: 2.5rem;
+    /* border-top: 2px solid rgba(133, 39, 54, 0.12); */
+}
+.ticket{
+    position: relative;
+    width: 36%;
+    flex: 0 0 36%;
+    height: auto;
+    padding: 2.2rem 1.6rem 1.8rem;
+    border-radius: 0.15rem;
+    background-color: var(--color-background, #fdfaf3);
+    background-image: var(--ticket-texture, none);
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: multiply;
+    box-shadow:
+        0 1.6rem 3rem rgba(0, 0, 0, 0.16),
+        0 0.3rem 0.6rem rgba(0, 0, 0, 0.08);
+    transform: rotate(-1.3deg);
+    font-family: 'Geist Mono', 'Courier New', ui-monospace, monospace;
+}
+.ticket::before,
+.ticket::after{
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 0.75rem;
+    background-color: var(--color-background, #fdfaf3);
+    background-image: var(--ticket-texture, none);
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: multiply;
+    clip-path: polygon(
+        0% 100%, 5% 0%, 10% 100%, 15% 0%, 20% 100%, 25% 0%, 30% 100%,
+        35% 0%, 40% 100%, 45% 0%, 50% 100%, 55% 0%, 60% 100%, 65% 0%,
+        70% 100%, 75% 0%, 80% 100%, 85% 0%, 90% 100%, 95% 0%, 100% 100%
+    );
+}
+.ticket::before{ top: -0.68rem; }
+.ticket::after{ bottom: -0.68rem; transform: rotate(180deg); }
+.ticketId{
+    font-weight: 400;
+    color: var(--accent);
+    margin: 0;
+    opacity: 0.7;
+    text-align: center;
+    letter-spacing: 0.04em;
+    font-family: 'Geist Mono', 'Courier New', ui-monospace, monospace;
+    font-size: 0.85rem;
+}
+.ticketDivider{
+    height: 0;
+    margin: 1rem 0;
+    border-top: 2px dashed color-mix(in srgb, var(--accent) 40%, transparent);
+}
+.ticketBody{
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+.ticketRow{
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+}
+.ticketLabel{
+    flex: 0 0 auto;
+    font-family: 'Geist Mono', 'Courier New', ui-monospace, monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    opacity: 0.7;
+}
+.ticketValue{
+    flex: 0 1 auto;
+    font-family: 'Geist Mono', 'Courier New', ui-monospace, monospace;
+    font-size: 0.9rem;
+    color: var(--accent);
+    text-align: right;
+}
+.ticketServed{
+    margin: 0;
+    text-align: center;
+    font-family: 'Geist Mono', 'Courier New', ui-monospace, monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    opacity: 0.7;
+}
+.ticketHoles{
+    width: 100%;
+    height: 2.6rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0.6rem;
+    margin-bottom: 0.8rem;
+}
+.ticketHoles h2{
+    color: var(--accent);
+    font-weight: 800;
+}
+.hole1, .hole2{
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    /* background-color: var(--color-background); */
+    background-color: #efecec;
+    border: 3px var(--accent) solid;
+}
+
+.why{
+    flex: 1 1 auto;
+    min-width: 0;
+}
+.why h2, .how h2{
+    margin: 0 0 1rem;
+    font-family: var(--font-thick, 'Recoleta Alt', Georgia, serif);
+    font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+    line-height: 1.1;
+    color: var(--accent);
+}
+.why p, .how p{
+    font-family: var(--font-thin, Helvetica);
+    font-size: 1.15rem;
+    line-height: 1.6;
+    max-width: 56ch;
+}
+/* Backstory column shrinks to leave room for Andie beside it. */
+.whyNarrow p{
+    max-width: 40ch;
+}
+.introAndie{
+    flex: 0 0 auto;
+    align-self: flex-start;
+    width: 24%;
+    max-width: 240px;
+    height: auto;
+    margin-top: -3.5rem;   /* lift her up to cover the empty gap beside the text */
+}
+
+.main{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 3.5rem;
+    /* margin-top: 1rem; */
+    padding-top: 2.5rem;
+    /* border-top: 2px solid rgba(133, 39, 54, 0.12); */
+}
+.how{
+    width: 46%;
+    flex: 0 0 46%;
+    min-width: 0;
+}
+/* 2D Game page: stretch the left column to the gallery's height and pin the
+   gameplay clip to its bottom, so it lands beside the workplace picture. */
+.howGame{
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+}
+.howVideo{
+    width: 118%;
+    margin-left: -18%;   /* grow leftward into the gutter, clear of the gallery */
+    margin-top: auto;
+    display: block;
+}
+.steps{
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.steps li{
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+.steps li p{
+    color: var(--accent);
+}
+.steps h3{
+    margin: 0;
+    font-family: var(--font-thick, 'Recoleta Alt', Georgia, serif);
+    font-size: 1.25rem;
+    line-height: 1.2;
+    color: var(--accent);
+}
+.steps p{
+    margin: 0;
+    font-family: var(--font-thin, Helvetica);
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: var(--maroon, #852736);
+    opacity: 0.85;
+}
+
+.beltWrap{
+    position: relative;
+    left: 50%;
+    right: 50%;
+    width: 100vw;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    overflow: hidden;
+    margin-top: 2rem;
+}
+.belt{
+    display: flex;
+    gap: 0;
+    width: max-content;
+    animation: beltScroll 22s linear infinite;
+}
+.beltImage{
+    height: 9rem;
+    flex: 0 0 auto;
+    display: block;
+}
+@keyframes beltScroll{
+    from{ transform: translateX(0); }
+    to{ transform: translateX(-50%); }
+}
+
+/* Full-bleed strip of the hand-drawn game components, sliding right to left
+   forever. Each piece is a button: clicking it opens the shared lightbox so
+   it rises off the strip and scales up for a closer look. */
+.gameStripWrap{
+    position: relative;
+    left: 50%;
+    right: 50%;
+    width: 100vw;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    overflow: hidden;
+    margin-top: 2rem;
+    padding: 1.6rem 0;
+}
+.gameTrack{
+    display: flex;
+    align-items: center;
+    gap: 2.6rem;
+    width: max-content;
+    animation: gameScroll 90s linear infinite;
+}
+.gameTrack:hover{
+    animation-play-state: paused;   /* hold still so a moving piece is easy to click */
+}
+.gameTrackReverse{
+    animation-direction: reverse;   /* travels the opposite way (left to right) */
+}
+.gameItem{
+    flex: 0 0 auto;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: zoom-in;
+    transition: transform 0.25s ease, filter 0.25s ease;
+}
+.gameItem:hover{
+    transform: translateY(-0.7rem) scale(1.08);
+    filter: drop-shadow(0 0.8rem 1.2rem rgba(0, 0, 0, 0.22));
+}
+.gameImage{
+    height: 12rem;
+    width: auto;
+    display: block;
+    pointer-events: none;   /* clicks land on the button, not the img */
+}
+.gameImageSmall{
+    height: 8.5rem;   /* 11-trinket2 reads oversized next to the rest */
+}
+@keyframes gameScroll{
+    from{ transform: translateX(0); }
+    to{ transform: translateX(-50%); }
+}
+
+/* Two booking-flow clips, side by side, always playing. Spans the full
+   content width so the pair lines up with the page's left/right margins. */
+.bookingVideos{
+    display: flex;
+    flex-direction: row;
+    gap: 0.6rem;
+    width: 100%;
+    margin-top: 2rem;
+}
+.bookingVideo{
+    flex: 1 1 0;
+    min-width: 0;
+    width: 50%;
+    aspect-ratio: 16 / 9;
+    display: block;
+    object-fit: cover;
+    border: none;
+}
+
+.results{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 3rem;
+    margin-top: 1rem;
+    padding-top: 2.5rem;
+    /* border-top: 2px solid rgba(133, 39, 54, 0.12); */
+}
+.resultsText{
+    flex: 1 1 auto;
+    min-width: 0;
+}
+.resultsAndie{
+    flex: 0 0 auto;
+    align-self: center;
+    width: 40%;
+    max-width: 400px;
+    height: auto;
+}
+.results h2{
+    margin: 0 0 1rem;
+    font-family: var(--font-thick, 'Recoleta Alt', Georgia, serif);
+    font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+    line-height: 1.1;
+    color: var(--accent);
+}
+.results p{
+    font-family: var(--font-thin, Helvetica);
+    font-size: 1.15rem;
+    line-height: 1.6;
+    max-width: 42ch;
+}
+.resultsVideo{
+    flex: 0 0 25%;
+    width: 25%;
+    margin-right: 6%;
+    border-radius: 2.8rem;
+    display: block;
+}
+
+.gallery{
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 20rem;
+    display: grid;
+    place-items: center;
+    border: 2px dashed var(--accent);
+    border-radius: 1rem;
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    color: var(--accent);
+    font-family: 'Geist Mono', 'Courier New', ui-monospace, monospace;
+    font-size: 0.95rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+.galleryGrid{
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.galleryRow{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1rem;
+}
+.galleryImage{
+    flex: 1 1 0;
+    min-width: 0;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 22rem;
+    object-fit: contain;
+    display: block;
+    cursor: zoom-in;
+    transition: transform 0.2s ease;
+}
+.galleryImageFull{
+    width: 100%;
+    max-width: 100%;
+    max-height: none;
+}
+.galleryImageBig{
+    max-height: 26rem;
+}
+.galleryImage:hover{
+    transform: scale(1.02);
+}
+
+.lightbox{
+    position: fixed;
+    inset: 0;
+    z-index: 5000;
+    display: flex;
+    overflow-y: auto;
+    padding: 5vh 5vw;
+    background: rgba(0, 0, 0, 0.85);
+    cursor: zoom-out;
+    animation: pageIn 0.2s ease both;
+}
+/* Capped well under the viewport so the whole image is always visible at
+   once -- no scrolling needed to see the full picture up close. */
+.lightboxImage{
+    max-width: 60%;
+    max-height: 60vh;
+    width: auto;
+    height: auto;
+    margin: auto;
+    object-fit: contain;
+    box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.5);
+    animation: lightboxRise 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+/* The game components are transparent SVGs, so a box-shadow just paints a grey
+   rectangle behind them. Drop it for those. */
+.lightboxImagePlain{
+    box-shadow: none;
+}
+@keyframes lightboxRise{
+    from{ opacity: 0; transform: translateY(2rem) scale(0.4); }
+    to  { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Prev / next controls for stepping through the game-component lightbox. */
+.lightboxArrow{
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5001;
+    width: 3.6rem;
+    height: 3.6rem;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    background: rgba(0, 0, 0, 0.35);
+    color: #fff;
+    font-size: 2.2rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+.lightboxArrow:hover{
+    background: rgba(0, 0, 0, 0.65);
+    transform: translateY(-50%) scale(1.08);
+}
+.lightboxPrev{ left: 3vw; }
+.lightboxNext{ right: 3vw; }
+
+.pager{
+    display: flex;
+    justify-content: space-between;
+    width: calc(100% + 30px);
+    margin-left: -30px;
+    gap: 1rem;
+    margin-top: 1.6rem;
+    padding-top: 1.6rem;
+    /* border-top: 2px solid rgba(133, 39, 54, 0.15); */
+    background-color: var(--accent);
+    color: var(--beige);
+    border-radius: 20px;
+    padding: 30px;
+}
+.pagerBtn{
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    max-width: 46%;
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: inherit;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+.next{
+    text-align: right;
+    align-items: flex-end;
+}
+.pagerLabel{
+    font-family: 'Geist Mono', 'Courier New', ui-monospace, monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0.55;
+}
+.pagerName{
+    font-size: 1.15rem;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+.pagerBtn:hover .pagerName{
+    color: var(--color-background);
+}
+
+@media (max-width: 820px){
+    .content{
+        grid-template-columns: 1fr;
+        gap: 2.4rem;
+    }
+    .right{
+        position: static;
+        order: -1;              /* placeholder on top when stacked */
+    }
+    .imagePlaceholder, .mainImage{ aspect-ratio: 16 / 9; }
+
+    .intro, .main, .results{
+        flex-direction: column;
+        gap: 2rem;
+    }
+    .ticket{ width: 100%; flex-basis: auto; }
+    .how{ width: 100%; flex-basis: auto; }
+    .howVideo{ width: 100%; margin-left: 0; margin-top: 1.5rem; }
+    .mainImageGame{ width: 100%; margin-left: 0; }
+    .gallery{ min-height: 14rem; width: 100%; }
+    .resultsVideo{ width: 100%; flex-basis: auto; }
+    .bookingVideos{ flex-direction: column; }
+    .bookingVideo{ width: 100%; }
+    .gameImage{ height: 8rem; }
+    .gameTrack{ gap: 1.8rem; }
+    .whyNarrow p{ max-width: none; }
+    .introAndie, .resultsAndie{ width: 55%; max-width: 260px; align-self: center; }
+}
+
+@media (max-width: 640px){
+    .pager{ flex-direction: column; }
+    .next{ text-align: left; align-items: flex-start; }
+    .lightboxArrow{ width: 2.8rem; height: 2.8rem; font-size: 1.7rem; }
+    .lightboxPrev{ left: 1vw; }
+    .lightboxNext{ right: 1vw; }
+}

@@ -1,0 +1,45 @@
+/* Sushi conveyor belt: a horizontal strip that loops right -> left forever. */
+
+.container {
+    /* .App adds 5% left/right padding; pull the belt back out to the
+       true left edge of the viewport so there's no gap on the left. */
+    margin-left: -5%;
+    width: 100vw;
+    overflow: hidden;          /* clip the part of the strip that's off-screen */
+    padding: 0.5rem 0 5rem;    /* less room above (Projects) than below (Designs) */
+    background: transparent;
+    /* Query container so .strip's height below can be tied to this
+       section's own width -- same fix as the Projects section. */
+    container-type: inline-size;
+}
+
+.track {
+    display: flex;
+    width: max-content;        /* as wide as both copies together */
+    animation: scrollLeft 40s linear infinite;
+}
+
+.strip {
+    display: block;
+    /* cqw, not a flat 140px -- a fixed height doesn't shrink with the
+       belt's own width, so on a narrower window the sushi pieces stayed
+       full size while everything else scaled down, making them look
+       oversized relative to the belt. */
+    height: 10cqw;
+    width: auto;
+    flex-shrink: 0;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* Shift the track left by exactly one copy's width (half the flex row),
+   then jump back to 0. Because the two copies are identical, the seam
+   is invisible and the motion looks continuous. */
+@keyframes scrollLeft {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .track { animation: none; }
+}

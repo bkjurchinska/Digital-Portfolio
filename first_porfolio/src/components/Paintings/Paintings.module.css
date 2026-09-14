@@ -1,0 +1,370 @@
+@import '../../vars.css';
+
+/* Layout + typography mirror the "The Journey's End" canvas
+   (src/assets/The Journey's End.dc.html). Its "organic" design-system tokens
+   are re-declared here, mapped onto the site palette, so the section is
+   self-contained. */
+.container{
+    --c-surface: #fdfaf3;
+    --c-ink: #2e2b25;
+    --c-accent-800: var(--maroon, #852736);
+    --c-accent-700: #9a3a48;
+    --c-accent-600: #b0505d;
+    --c-accent2-600: #7a9b76;
+    --c-accent2-200: #dfe8dc;
+    --c-neutral-900: #2b2721;
+    --c-neutral-800: #463f36;
+    --c-neutral-700: #6a5f52;
+    --c-neutral-600: #8a7d6c;
+    --c-neutral-300: #d9cfc0;
+    --c-neutral-100: #f6f1e8;
+    --f-heading: var(--font-thick, 'Recoleta Alt', Georgia, serif);
+    --f-body: Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    --r-lg: 20px;
+    --r-md: 14px;
+    --r-sm: 8px;
+    --sh-md: 0 18px 40px -12px rgba(46, 43, 37, 0.22);
+    --sh-sm: 0 6px 16px -6px rgba(46, 43, 37, 0.18);
+
+    position: relative;
+    width: 95%;
+    margin-top: 15%;
+    margin-bottom: 10%;
+    color: var(--c-ink);
+    font-family: var(--f-body);
+}
+
+/* main two-column grid */
+.layout{
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(300px, 470px) minmax(320px, 1fr);
+    gap: 44px 48px;
+    align-items: center;
+}
+
+.copy{ display: flex; flex-direction: column; gap: 24px; max-width: 560px; }
+
+.title{
+    margin: 0;
+    font-family: var(--f-heading);
+    font-weight: 400;
+    font-size: clamp(48px, 5.2vw, 80px);
+    line-height: 0.96;
+    color: var(--c-accent-800);
+}
+
+.lead{
+    margin: 0;
+    max-width: 38ch;
+    font-size: 19px;
+    line-height: 1.6;
+    color: var(--maroon);
+    font-family: var(--thin, Helvetica);
+}
+
+.actions{ display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.printBtn{
+    flex: 0 0 auto;
+    font-family: var(--f-body);
+    font-size: 16px;
+    padding: 15px 30px;
+    white-space: nowrap;
+    border: 3px solid var(--c-accent-800);
+    border-radius: 999px;
+    /* background: var(--c-accent-800); */
+    color: var(--maroon);
+    font-family: var(--f-heading);
+    cursor: pointer;
+    box-shadow: var(--sh-sm);
+    transition: transform 0.12s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+}
+.printBtn:hover{ 
+    box-shadow: var(--sh-md);
+    background: var(--c-accent-800);
+    color: var(--beige);
+    transition: all 0.2s ease;
+}
+.printBtn:active{ transform: translateY(1px); }
+.printBtn:disabled{ opacity: 0.5; cursor: default; box-shadow: none; }
+
+/* Second CTA, same shape as printBtn but filled solid so the pair reads as
+   primary (print) + secondary (pay) rather than two identical buttons. */
+.receiptBtn{
+    flex: 0 0 auto;
+    font-family: var(--f-heading);
+    font-size: 16px;
+    padding: 15px 30px;
+    white-space: nowrap;
+    border: 3px solid var(--c-accent-800);
+    border-radius: 999px;
+    background: var(--c-accent-800);
+    color: var(--beige);
+    cursor: pointer;
+    box-shadow: var(--sh-sm);
+    transition: transform 0.12s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+}
+.receiptBtn:hover{
+    box-shadow: var(--sh-md);
+    background: var(--maroon);
+}
+.receiptBtn:active{ transform: translateY(1px); }
+
+/* right column -- printer + ticket. Bigger than the reference (540 vs 460) and
+   nudged left so it doesn't hug the far edge. */
+.stage{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-self: start;
+    width: 100%;
+    max-width: 540px;
+    left: 20%;
+    /* transform: translateX(-28px); */
+}
+
+.printer{
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    background: var(--c-surface);
+    border-radius: var(--r-lg);
+    padding: 28px 30px 32px;
+    box-shadow: var(--sh-md);
+}
+.printerHead{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+.printerReady{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-thin);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--c-neutral-700);
+    white-space: nowrap;
+}
+.lamp{
+    width: 9px;
+    height: 9px;
+    border-radius: 999px;
+    background: var(--c-accent2-600);
+    animation: lampBlink 2.4s ease-in-out infinite;
+}
+.slot{
+    height: 18px;
+    border-radius: 999px;
+    background: var(--c-neutral-900);
+    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.55);
+}
+.feet{ display: flex; justify-content: space-between; margin-top: 14px; }
+.feet span{ width: 58px; height: 6px; border-radius: 999px; background: var(--c-neutral-300); }
+
+.ticketArea{
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    min-height: 300px;
+    margin-top: -6px;
+}
+
+/* Hide the ticket only while it's tucked up inside the printer: clip just the
+   top edge (at the printer's mouth) and leave the other three sides wide open,
+   so the ticket's drop-shadow is never cut and no box outline shows. */
+.ticketClip{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    clip-path: inset(0 -200px -300px -200px);
+}
+
+.ticketLink{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    display: block;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    text-align: left;
+    color: var(--c-ink);
+    cursor: default;
+    filter: drop-shadow(0 14px 26px rgba(46, 43, 37, 0.22));
+    transform: translateY(-101%);            /* tucked up inside the printer */
+    transition: transform 1.4s cubic-bezier(0.45, 0.05, 0.35, 1), filter 0.25s ease;
+}
+.ticketLink.out{ transform: translateY(0); }
+.ticketLink.ready{
+    cursor: pointer;
+    transition: transform 0.28s ease, filter 0.25s ease;
+    animation: ticketSettle 0.9s ease-in-out 0.1s 2;
+}
+.ticketLink.ready:hover{
+    transform: translateY(6px) rotate(-1.4deg);
+    filter: drop-shadow(0 20px 34px rgba(46, 43, 37, 0.3));
+}
+
+/* Transparent box -- the ticket's shape (scalloped edges, perforation notch)
+   and paper texture both come from the SVG's own vector mask, not from a CSS
+   background colour + border-radius. */
+.ticket{
+    display: flex;
+    width: 80%;
+    margin: 0 auto;
+    aspect-ratio: 827 / 424;   /* matches the SVG's own ratio -- height follows width instead of the text content, so the art is never cropped */
+    background: url('../../assets/galleryTicket.svg') center / contain no-repeat;
+    /* Query container so the text below (kicker/venue/meta/cta/serial, plus
+       the gaps/padding that position them) can size itself in `cqw` -- a %
+       of THIS box's own width -- instead of flat px. .ticket's width is
+       itself already responsive (80% of .ticketLink, which follows
+       .stage down to its narrow-breakpoint 100%), so flat-px text just
+       stayed the same size while the ticket art shrank around it, growing
+       proportionally bigger the smaller the window got. */
+    container-type: inline-size;
+}
+.ticketBody{
+    flex: 1;
+    min-width: 0;
+    max-width: 100%;
+    /* cqw, calibrated at .ticket's own reference width (349.325px) so
+       these reproduce the exact original 20px/22px/14px at that size. */
+    padding: 5.726cqw 6.297cqw;
+    display: flex;
+    flex-direction: column;
+    gap: 4.008cqw;
+    /* background: orange; */
+}
+.ticketTop{
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 4.582cqw;
+}
+.ticketKicker{
+    display: block;
+    font-size: 2.863cqw;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-top: 8.591cqw;
+    color: black;
+    font-family: var(--thin, Helvetica);
+}
+.ticketKicker, .ticketVenue, .ticketMeta{
+    margin-left: 5.726cqw;
+}
+.ticketVenue{
+    display: block;
+    margin-top: 1.432cqw;
+    font-family: var(--f-heading);
+    font-size: 6.870cqw;
+    line-height: 1.1;
+    color: var(--c-accent-800);
+}
+.ticketMeta{
+    display: block;
+    margin-top: 2.863cqw;
+    font-size: 3.435cqw;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: black;
+    font-family: 'Geist Mono', monospace;
+}
+/* Compact vertical barcode -- stacked horizontal strokes instead of the usual
+   side-by-side vertical ones, sitting right-aligned directly above the
+   serial number below it. */
+.barcode{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-self: flex-end;
+    gap: 1.7px;
+    width: 28px;
+    margin-top: 40px;
+    margin-right: 25px;
+    scale: 1.6;
+}
+.barcode span{
+    width: 100%;
+    background: black;
+}
+
+.ticketFoot{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;      /* pushes the footer down, closer to the bottom edge */
+    gap: 4.008cqw;
+    padding-top: 4.582cqw;
+    border-top: 1px dashed black;
+}
+.ticketCta{
+    font-family: 'Geist Mono', monospace;
+    font-size: 3.435cqw;
+    color: var(--c-accent-800);
+    white-space: nowrap;
+    margin-left: 7.157cqw;
+}
+.ticketSerial{
+    font-family: 'Geist Mono', monospace;
+    font-size: 2.863cqw;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgb(22, 22, 22);
+    white-space: nowrap;
+    margin-right: 7.157cqw;
+}
+
+.placeholder{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 56px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: var(--c-neutral-600);
+}
+.placeholderBar{ width: 210px; height: 2px; border-radius: 999px; background: var(--c-neutral-300); }
+.placeholderText{
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-align: center;
+}
+/* Little rock-back-and-forth once the ticket has fully fed out. */
+@keyframes ticketSettle{
+    0%, 100% { transform: translateY(0) rotate(0); }
+    50%      { transform: translateY(0) rotate(-2deg); }
+}
+@keyframes lampBlink{ 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce){
+    .ticketLink{ transition-duration: 1ms; animation: none; }
+    .lamp{ animation: none; }
+}
+
+@media (max-width: 900px){
+    .layout{ grid-template-columns: 1fr; }
+    .copy{ max-width: none; }
+    /* `left: 20%` (set above) nudges the printer rightward within its own
+       grid column on the two-column desktop layout -- once things stack
+       into one column here, that leftover relative-position offset just
+       shoves the now-centered .stage off to the right instead, so it has
+       to be reset for the centering below to actually land in the middle. */
+    .stage{ justify-self: center; margin: 0 auto; left: 0; transform: none; }
+}

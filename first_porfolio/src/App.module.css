@@ -1,0 +1,26 @@
+@import "./vars.css";
+html, body{
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-background);
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Edge Chromium */
+html::-webkit-scrollbar, body::-webkit-scrollbar {
+    display: none;
+}
+
+html{
+    /* scroll-behavior: smooth; */
+}
+
+.App {
+    background-color: var(--color-background);
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+    padding-left: 5%;
+    padding-right: 5%;
+}

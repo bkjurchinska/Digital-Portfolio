@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Pixelify+Sans:wght@400..700&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root{
+    /* Colours */
+    --color-text: #852736;
+    --color-primary: #FCF3E2;
+    --color-secondary: #852736;
+    --color-background: #faf9f6;
+    --maroon: #852736;
+    --beige: #E2C99E;
+    --lighter-beige: #fae7c7;
+    --purple: #AA74A0;
+    --light-purple: #9792CB;
+    --dark-blue: #414B9E;
+
+    /*Fonts*/
+    --font-thick: 'Recoleta Alt';
+    --font-thin: 'Raleway', Helvetica;
+    --font-size: 3.8vh;
+
+}

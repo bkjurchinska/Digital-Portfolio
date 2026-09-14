@@ -1,0 +1,808 @@
+@import "../../vars.css";
+
+body{
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; 
+    overflow-y: visible;
+}
+
+.container{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 30px;
+    align-items: center;
+    justify-content: space-between;
+    /* background-color: aquamarine; */
+    margin-top: 10%;
+    /* 0, not a positive value: this still needs to be a stacking context (so
+       the decorative -1/-2 z-index children below stay confined inside Hero
+       instead of sinking under the whole page), but a positive z-index here
+       made the entire Hero section -- including the parts that visually
+       spill past its own box, like the soup letters and buttons -- paint
+       above every later sibling section regardless of DOM order, which is
+       what was silently blocking clicks on the Menu section beneath it. */
+    z-index: 0;
+    margin-left: 5%;
+    margin-right: 10%;
+    transition: 0.8s ease;
+}
+
+.content{
+    display: flex;
+    flex-direction: column;
+    margin-right: 3%;
+    margin-top: 3%;
+    flex: 1;
+    width: 100%;
+    max-width: 600px;
+    /* min, not a fixed height -- a fixed box clipped the headline on
+       narrow screens where the text wraps to more lines than the desktop
+       layout this was tuned for. */
+    min-height: 420px;
+    align-items: flex-start;
+    color: var(--color-text);
+    z-index: 1;
+    /* background-color: red; */
+}
+
+.introImg{
+    display: flex;
+    flex-direction: column;
+}
+
+.title{
+    display: flex;
+    position: relative;
+    bottom: 2%;
+    max-width: 600px;
+    width: 100%;
+    height: auto;
+    /* clamp, not a bare vw -- unbounded vw either shrinks to unreadable on
+       a phone or balloons on an ultra-wide monitor. */
+    font-size: clamp(1.1rem, 3vw, 1.8rem);
+    font-weight: 700;
+    font-style: normal;
+    line-height: 47px;
+    font-family: var(--font-thin);
+    color: var(--color-text);
+}
+
+.description{
+    display: flex;
+    position: relative;
+    bottom: 6%;
+    width: 100%;
+    max-width: 750px;
+    margin: 0 auto;
+    text-align: left;
+    height: auto;
+    font-family: var(--font-thin);
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    /* font-size: 1.5vw; */
+}
+.infoImg{
+    width: 100%;
+    /* background-color: red; */
+}
+
+.welcomeText{
+    display: block;
+    position: relative;
+    width: 100%;
+    max-width: 100vw;
+    align-items: center;
+    font-family: var(--font-thick);
+    font-style: normal;
+    margin-left: 0;
+    /* Right-aligned so "Welcome"/"to my" sit against the right edge of this
+       column, next to the maroon rectangle in .imageContainer -- doesn't
+       actually reach .welcome/.toMy themselves since they're flex
+       containers (justify-content below does the real work), but keeps
+       any other inline content in here consistent. */
+    text-align: right;
+    font-weight: 700;
+    /* font-size: 9vw; */
+    letter-spacing: 5px;
+    line-height: 1.8;
+}
+
+.welcome{
+    margin: 0;
+    display: flex;
+    justify-content: flex-end;
+    position: relative;
+    /* margin-top: -7%; */
+    bottom: 13%;
+    /* clamp, not a bare vw -- these set their own font-size directly (a
+       parent .welcomeText font-size never reaches them), so this is the
+       only thing bounding the headline on a phone or an ultra-wide monitor. */
+    font-size: clamp(5.6rem, 9vw, 8.5rem);
+}
+.toMy{
+    position: relative;
+    width: 100%;
+    bottom: 28%;
+    display: flex;
+    justify-content: flex-end;
+    line-height: 0.8;
+    font-size: clamp(5.6rem, 9vw, 8.5rem);
+}
+
+.soup_image{
+    position: relative;
+    display: block;
+    width: 150%;
+    bottom: 15%;
+    right: 20%;
+    /* margin-bottom: 20%; */
+    /* max-width: 100%; */
+    height: auto;
+    object-fit: contain;
+    flex-shrink: 1;
+    /* background-color: green; */
+}
+
+.imageContainer{
+    position: relative;
+    top: 20%;
+    margin: 0;
+    padding: 0;
+    /* 0, not auto: same fix as .container -- without an explicit z-index
+       here, this element never becomes its own stacking context, so its
+       children's z-index values (.letters is z-index 3) leak out and get
+       compared directly against .buttons/.checkMenu in .container's
+       stacking context, letting .letters paint (and eat clicks) on top of
+       the button wherever the two boxes happen to overlap. */
+    z-index: 0;
+    /* Makes this a query container so descendants (the soup letters and the
+       floating confetti letters/years) can size and position themselves in
+       `cqw` -- a % of THIS box's own width -- instead of the viewport's.
+       That's what keeps the whole bowl+spoon+letters illustration scaling
+       together as one composition, in lockstep, at every window size. */
+    container-type: inline-size;
+    /* background-color: blue; */
+}
+
+.spoon{
+    position: absolute;
+    max-width: 140%;
+    bottom: 12%;
+    left: -20%;
+    z-index: 2;
+    transform-origin: center;
+    transition: transform 1s ease;
+}
+.randomLetters{
+    position: absolute;
+    bottom: 14%;
+    left: 4%;
+    z-index: 1;
+    will-change: transform;
+}
+
+@keyframes soupFloat{
+    /* No scale() here -- each element's size now comes from its own
+       (cqw-based) width, so the animation only ever handles the float. */
+    0% { transform: translate(0,0) rotate(0deg);}
+    22% { transform: translate(var(--float-x, 4px), calc(var(--float-y, -6px) * 0.6)) rotate(calc(var(--float-r, 4deg)*-0.5));}
+    48%  { transform: translate(calc(var(--float-x, 4px) * -0.7), var(--float-y, -6px)) rotate(var(--float-r, 4deg)); }
+    75%  { transform: translate(calc(var(--float-x, 4px) * 0.4), calc(var(--float-y, -6px) * 0.3)) rotate(calc(var(--float-r, 4deg) * -0.3)); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+}
+.letters{
+    position: absolute;
+    /* max-width: 250%; */
+    top: 18%;
+    right: 5%;
+    height: 50%;
+    width: 100%;
+    /* border-radius: 50%; */
+    z-index: 3;
+    /* background-color: orange; */
+}
+.letters img{
+   /* cqw, not vw -- ties the letter size to .imageContainer's own rendered
+      width (the query container) so it shrinks/grows in exact lockstep
+      with the soup bowl beneath it, at every window size. 16.17cqw
+      reproduces the original flat 95px at the container's own reference
+      width; clamped so it can't vanish on a tiny container or balloon on
+      a huge one. */
+   width: clamp(30px, 16.17cqw, 100px);
+   height: auto;
+}
+
+.p_image, .o_image, .r_image, .t_image, .f_image, .o1_image, .l_image, .i_image, .o2_image{
+    transform: scale(1.5);
+    /* z-index: 2; */
+}
+
+.p_image{
+    position: absolute;
+    top: 32%;
+    left: 24%;
+}
+/* .p_image:hover{
+    transform: translate(10px, -10px) rotate(15deg);
+} */
+.o_image{
+    position: absolute;
+    top: 42%;
+    left: 33%;
+    z-index: 2;
+}
+.o_image:hover{
+    transform: scale(1.5) translate(5px, -10px);
+}
+.r_image{
+    position: absolute;
+    /* width: 85px; */
+    top: 18%;
+    left: 38%;
+    z-index: 2;
+    transform-origin: center;
+    /* background-color: blue; */
+}
+.r_image:hover{
+    transform: scale(1.5) translate(-10px, -10px) rotate(-15deg);
+}
+.t_image{
+    position: absolute;
+    top: 12%;
+    left: 48%;
+    z-index: 1;
+}
+.t_image:hover{
+    transform: scale(1.5) translate(-5px, -15px) rotate(5deg);
+}
+.f_image{
+    position: absolute;
+    /* width: 83px; */
+    top: 25%;
+    left: 55%;
+    z-index: 1;
+    /* background-color: violet; */
+}
+.f_image:hover{
+    transform: scale(1.5) translate(-5px, 15px) rotate(5deg);
+}
+.o1_image{
+    position: absolute;
+    bottom: 35%;
+    right: 25%;
+    z-index: 1;
+}
+.o1_image:hover{
+    transform: scale(1.5) translate(-10px, 15px) rotate(-10deg);
+}
+.l_image{
+    position: absolute;
+    /* width: 82px; */
+    top: 30%;
+    left: 66%;
+    z-index: 1;
+    /* background-color: brown; */
+}
+.i_image{
+    position: absolute;
+    z-index: 1;
+    right: 15%;
+    top: 19%;
+}
+.o2_image{
+    position: absolute;
+    z-index: 1;
+    right: 6%;
+    top: 30%;
+}
+
+
+/* full window */
+@media (min-width: 1024px) {
+    .infoImg{
+        display: flex;
+        flex-direction: row;
+    }
+    .container {
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+    .imageContainer {
+        /* Explicit width, not just a cap -- .imageContainer is a flex item
+           here with no other width/flex-basis set, so without this its
+           size is resolved from its CONTENT (max-content), and container
+           containment (from container-type: inline-size below) explicitly
+           cuts that content->size dependency, collapsing it to 0 width. */
+        width: 50%;
+        max-width: 50%;
+        height: auto;
+        object-fit: contain;
+        flex-shrink: 0;
+    }
+    .content{
+        width: 50%;
+        max-width: 50%;
+        flex: 1;
+        /* padding-top: 5%; */
+        align-items: center;
+    }
+}
+
+@media (max-width: 1024px) {
+    /* Symmetric margins once stacked -- the 5%/10% split exists to leave
+       room for the rectangle's bleed in the >=1024px row layout, but once
+       everything stacks and centers instead, an uneven frame just pushes
+       the whole stack off-centre. */
+    .container{
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+    .content{
+        margin-right: 0;
+        /* Centers "Hi, I'm Bisera" too -- .content's cross axis (column
+           layout) was still flex-start, so the title stayed pinned to the
+           left edge even after everything below it centered. */
+        align-items: center;
+    }
+    /* .title is itself a flex container (for its own layout reasons), so
+       centering its text needs justify-content, not just the align-items
+       change above on its parent. */
+    .title{
+        justify-content: center;
+    }
+    /* "Welcome"/"to my" centre on the page once stacked, instead of
+       hugging the (now nonexistent, since .imageContainer stacks below
+       instead of beside it) maroon rectangle's edge. */
+    .welcomeText{
+        text-align: center;
+    }
+    .welcome, .toMy{
+        justify-content: center;
+    }
+    /* .welcome has no line-height of its own (inherits 1.8 from
+       .welcomeText), so at this clamp's 5.6rem floor that's a ~161px line
+       box -- most of the gap above "to my" is that inherited line-height,
+       not the bottom:% offsets. Tightening it to 1 closes the gap without
+       touching either element's own size or position. */
+    .welcome{
+        line-height: 1;
+    }
+
+    .soup_image{
+        margin-top: -20%;
+        /* Bigger + shifted up, per earlier requests -- translateX/Y in cqw
+           (not %, which for a transform function would resolve against
+           .soup_image's OWN box instead) so the shift stays proportional
+           to .imageContainer's width at any narrow size, matching how
+           everything else here scales. translateY pushed much further
+           (-14cqw, was -3cqw) per an explicit follow-up request to move
+           the bowl further up even if it crosses .backgr_rect's borders
+           -- .randomLetters is deliberately NOT given the same increase
+           this time (see below), so the bowl and the confetti
+           letters/years no longer track each other 1:1 like they used to.
+           translateX pulled back to -4.63cqw (was -12) per a later request
+           to re-center the bowl on .backgr_rect -- measured directly
+           against the rectangle's own rendered center, not eyeballed. */
+        transform: scale(1.1) translateX(-4.63cqw) translateY(-14cqw);
+        transform-origin: center;
+    }
+    /* bottom raised further (18%, was 8%/-0.5%) to move the spoon up more
+       along with the bowl above. left still shifts it so its right edge
+       lands on .backgr_rect's right edge. */
+    .spoon{
+        bottom: 18%;
+        left: -30%;
+    }
+    /* Deliberately NOT kept in sync with .soup_image's translateY above
+       anymore (still -3cqw here, matching the bowl's OLD, smaller shift)
+       -- an explicit follow-up asked for the bowl to move further up
+       without moving these letters, so they now stay where they were
+       while the bowl moves independently above/below them. Still needs
+       its own explicit-point transform-origin, though: .randomLetters
+       itself has no width/height (every child is position:absolute, same
+       zero-size-wrapper situation as elsewhere in this codebase), so
+       transform-origin:center would just be its own anchor point, not
+       the bowl's center.
+       The extra `- 10px`/`+ 35px` in the calcs are flat nudges on top of
+       the cqw values, per follow-ups asking for an exact 10px lift and a
+       35px shift right (15, then 20 more; not %/cqw ones) -- calc() lets
+       the different units combine in one value. */
+    .randomLetters{
+        transform: scale(1.1) translateX(calc(-12cqw + 35px)) translateY(calc(-3cqw - 10px));
+        transform-origin: 51cqw -47.06cqw;
+    }
+    /* Caps + centers the whole bowl/spoon/letters illustration (and
+       everything scaled off its width via cqw) as one block, instead of
+       stretching it edge-to-edge -- which is also what was pushing
+       .backgr_rect's 120%-width bleed past the viewport's right edge. */
+    .imageContainer{
+        width: 100%;
+        max-width: 480px;
+        margin: 0 auto;
+    }
+    /* Centered on .imageContainer instead of left-flush-then-bleed-right
+       (fine on a wide desktop row where there's margin to spare, but not
+       here) so the rectangle reads as centered under "Welcome"/"to my". */
+    .backgr_rect{
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    /* Nudges the soup letters up onto the spoon and the floating
+       confetti letters/years down into the bowl -- both drift slightly
+       off their marks once the illustration is capped to this width.
+       top/right pushed further (2%/14%, was 10%/base 5%, briefly 18%)
+       so "PORTFOLIO" moves up together with the spoon above. */
+    .letters{
+        top: 2%;
+        right: 14%;
+    }
+    .randomLetters{
+        bottom: 6%;
+    }
+    /* The absolute-positioned/fixed-width button trick below is tuned for
+       the >=1024px side-by-side row layout; once .infoImg stacks instead,
+       let the button flow normally under it rather than guessing at a %
+       offset against a totally different stacked height. Generous
+       margin-top because the illustration's own layout height (soup_image's
+       negative margin-top and % bottom/right offsets above are pure paint
+       shifts, not counted in it) undershoots where it actually paints. */
+    .buttons{
+        position: static;
+        width: 100%;
+        justify-content: center;
+        margin-top: 11rem;
+    }
+    .checkMenu{
+        right: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .checkMenu{
+        width: 160px;
+        height: 52px;
+        font-size: 16px;
+    }
+}
+
+
+/* blob-btn => checkMenu/ placeOrder
+    blob-btn_inner => blob_inner
+    blob-btn_blobs => button_blobs
+    blob-btn_blob => blob */
+.buttons{
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    width: 550px;
+    top: 90%;
+    margin: 0;
+    padding: 0;
+    gap: 50px;
+    transition: 0.5s ease;
+    /* Above .imageContainer's stacking context so its decorative art can
+       never sit on top of the button and swallow clicks. */
+    z-index: 2;
+    /* background-color: red; */
+}
+@media (max-width: 1024px) {
+    /* Nudges the button down a bit, per request. Has to come after the
+       base rule above (not in the earlier @media(max-width:1024px) block
+       with the rest of the narrow overrides, several of which -- position,
+       width, margin, justify-content -- are ALSO silently losing to this
+       same base rule for the same reason) purely because of source order:
+       that earlier block sits before this base rule in the file, so for
+       any property both set, the later base rule wins the cascade
+       regardless of the media query, same issue as .squiggle/.letters
+       elsewhere in this file. */
+    .buttons{
+        top: 96%;
+    }
+}
+
+.checkMenu{
+    position: relative;
+    overflow: hidden;
+    width: 200px;
+    height: 60px;
+    border-radius: 10px;
+    border: 0;
+    /* background-color: var(--color-secondary); */
+    font-family: var(--font-thin);
+    color: var(--color-primary);
+    margin: 5%;
+    right: 85%;
+    padding: 10px;
+    cursor:pointer;
+    font-size: 18px;
+    transition: 0.5s ease;
+    z-index: 2;
+}
+/* .checkMenu:hover{
+    /* color: var(--color-secondary); 
+    font-weight: bold;
+} */
+
+.blob_inner{
+    z-index: -1;
+    overflow: hidden;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background-color: var(--color-secondary);
+}
+.button_blobs{
+    position: relative;
+    display: block;
+    height: 100%;
+    filter: url('goo');
+}
+.blob{
+    position: absolute;
+    top: 2px;
+    width: 30%;
+    height: 100%;
+    background-color: #540B0E;
+    border-radius: 100%;
+    transform: translate3d(0, 150%, 0) scale(1.7);
+    transition: transform 0.45s;
+}
+@supports (filter: url('#goo')) {
+    .blob {
+        transform: translate3d(0, 150%, 0) scale(1.4);
+    }
+}
+.blob:nth-child(1) {
+  left: 0%;
+  transition-delay: 0s;
+}
+
+.blob:nth-child(2) {
+  left: 30%;
+  transition-delay: 0.08s;
+}
+
+.blob:nth-child(3) {
+  left: 60%;
+  transition-delay: 0.16s;
+}
+
+.blob:nth-child(4) {
+  left: 90%;
+  transition-delay: 0.24s;
+}
+
+.checkMenu:hover .blob {
+  transform: translateZ(0) scale(1.7);
+}
+
+@supports (filter: url('#goo')) {
+  .blob-btn:hover .blob-btn__blob {
+    transform: translateZ(0) scale(1.4);
+}
+}
+
+
+@media (min-width: 1250px) {
+  .buttons{
+    transform: translateY(-140px);
+  }
+}
+
+/* Every offset/size below is `cqw` -- a % of .imageContainer's own width,
+   the query container set up there -- instead of a flat px. They were
+   derived by measuring each element's actual rendered position/size
+   against .imageContainer at one reference width and converting to a %,
+   so right now they land in exactly the same spots as before; from here on
+   they scale with the container (and so with the soup bowl/spoon) instead
+   of staying pinned to a fixed pixel spot regardless of window size. */
+.random_a_image, .random_b_image, .random_c_image, .random_q_image, .random_s_image, .random_v_image{
+    position: absolute;
+    z-index: 1;
+}
+.random_a_image{
+    bottom: 70.11cqw;
+    left: 58.01cqw;
+    width: 24cqw;
+    --float-x: 10px;
+    --float-y: 12px;
+    --float-r: 14deg;
+    --float-duration: 5.9s;
+    --float-delay: -1.2s;
+}
+.random_b_image{
+    bottom: 66.2cqw;
+    left: 21.42cqw;
+    width: 22.81cqw;
+    --float-x: -10px;
+    --float-y: -10px;
+    --float-r: -12deg;
+    --float-duration: 7.5s;
+    --float-delay: -3s;
+}
+.random_c_image{
+    bottom: 59.22cqw;
+    left: 70.78cqw;
+    width: 21.96cqw;
+    --float-x: 9px;
+    --float-y: -17px;
+    --float-r: 4deg;
+    --float-duration: 5s;
+    --float-delay: -0.4s;
+}
+.random_q_image{
+    bottom: 48.33cqw;
+    left: 7.12cqw;
+    width: 24.85cqw;
+    --float-x: -10px;
+    --float-y: -15px;
+    --float-r: -9.9deg;
+    --float-duration: 7.2s;
+    --float-delay: -2.1s;
+}
+.random_s_image{
+    bottom: 66.03cqw;
+    left: 39.63cqw;
+    width: 25.53cqw;
+    --float-x: 13px;
+    --float-y: -11px;
+    --float-r: 8deg;
+    --float-duration: 6.1s;
+    --float-delay: -4s;
+}
+@media (max-width: 1024px) {
+    /* Q/B/S/A/C nudged up ~5px individually (on top of the whole-group
+       .randomLetters transform elsewhere, which still moves them all
+       together), per a follow-up request -- +5px added via calc() so the
+       flat pixel nudge combines with each letter's existing cqw `bottom`.
+       The year numbers (2026) are deliberately left untouched. Has to
+       come after the base rules just above (not grouped with the rest of
+       the narrow overrides earlier in the file) purely because of source
+       order -- same cascade issue as .squiggle/.letters/.buttons
+       elsewhere in this file: a later same-specificity rule wins
+       regardless of the media query. */
+    .random_a_image{ bottom: calc(70.11cqw + 5px); }
+    .random_b_image{ bottom: calc(66.2cqw + 5px); }
+    .random_c_image{ bottom: calc(59.22cqw + 5px); }
+    .random_q_image{ bottom: calc(48.33cqw + 5px); }
+    .random_s_image{ bottom: calc(66.03cqw + 5px); }
+}
+
+.year_21, .year_0, .year_22, .year_6{
+    position: absolute;
+    z-index: 1;
+}
+.year_21{
+    bottom: 17.86cqw;
+    left: 21.59cqw;
+    width: 19.74cqw;
+    --float-x: 10px;
+    --float-y: -9px;
+    --float-r: 17deg;
+    --float-duration: 6.1s;
+    --float-delay: -4s;
+}
+.year_0{
+    bottom: 8.155cqw;
+    left: 32.65cqw;
+    width: 22.98cqw;
+    --float-x: 20px;
+    --float-y: -8px;
+    --float-r: 11deg;
+    --float-duration: 6.1s;
+    --float-delay: -4s;
+}
+.year_22{
+    bottom: 7.304cqw;
+    left: 45.07cqw;
+    width: 30.47cqw;
+    --float-x: 12px;
+    --float-y: -25px;
+    --float-r: 8deg;
+    --float-duration: 6.1s;
+    --float-delay: -4s;
+}
+.year_6{
+    bottom: 15.47cqw;
+    left: 60.56cqw;
+    width: 25.02cqw;
+    --float-x: 9px;
+    --float-y: -8px;
+    --float-r: 20deg;
+    --float-duration: 6.1s;
+    --float-delay: -4s;
+}
+.random_a_image, .random_b_image, .random_c_image, .random_q_image, .random_s_image, .year_21, .year_0, .year_22, .year_6{
+    animation: soupFloat var(--float-duration, 6s) var(--float-delay, 0s) ease-in-out infinite;
+}
+
+.backgr_rect{
+    position: absolute;
+    width: 120%;
+    height: 100%;
+    /* top: 100px; */
+    bottom: 100px;
+    border-radius: 20px;
+    background-color: var(--color-text);
+    z-index: -2;
+}
+.squiggle{
+    position: absolute;
+    /* width: 220%;
+    height: auto;
+    bottom: 42%;
+    right: -20%; */
+    bottom: 35%;
+    right: -20%;
+    /* cqw, not the SVG's own hardcoded 1390x434 attributes -- reproduces
+       that same rendered size at .imageContainer's reference width (587.5px
+       -> 236.6cqw = 1390px), so it scales down with the rest of the
+       illustration instead of staying pinned to a fixed pixel size. */
+    width: 236.6cqw;
+    height: auto;
+    z-index: -1;
+    transform: scale(1);
+    transform-origin: center;
+    will-change: transform;
+    animation: squiggleMorph 30s linear infinite;
+}
+@media (max-width: 1024px) {
+    /* Scaled down and re-centered instead of the desktop 236.6cqw/
+       right:-20% -- that bleeds ~460px past the LEFT edge here (the
+       rectangle no longer leaves room on that side once .imageContainer
+       stacks/centers below its own column instead of sitting in a row
+       next to .content), getting hard-clipped by body{overflow-x:hidden}
+       instead of just peeking out symmetrically like it does on the wide
+       layout. This has to come after the base .squiggle rule above (not
+       in the earlier @media(max-width:1024px) block with the rest of the
+       narrow overrides) purely because of source order -- that earlier
+       block sits BEFORE this base rule in the file, so for the properties
+       both set (width/right/transform), the later base rule was winning
+       the cascade regardless of the media query. */
+    /* 128cqw, not 100 -- the soup bowl grew (scale(1.1), see .soup_image
+       above) and now fully covers a squiggle sized to match
+       .imageContainer exactly. Bigger so it peeks out past the bowl again;
+       kept under ~130 so it still lands inside the viewport rather than
+       getting clipped by body{overflow-x:hidden} the way the original
+       236.6cqw did. */
+    .squiggle{
+        width: 145cqw;
+        bottom: 40%;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+    }
+}
+/* .squiggle path {
+    animation: squiggleMorph 9s ease-in-out infinite;
+} */
+
+@keyframes squiggleMorph {
+    0%   { d: path("M178.05 162.846C62.4617 174.99 -20.0967 311.653 4.286 325.184C15.2919 331.292 89.9809 246.583 207.928 264.467C307.927 279.63 376.786 392.943 452.455 420.414C540.509 452.382 672.861 426.768 762.242 355.863C925.777 226.131 917.914 140.477 1022.49 140.477C1141.21 140.477 1160.87 238.275 1248.93 283.013C1277.71 297.636 1356.09 309.1 1389.67 277.9C1395.17 272.787 1330.7 268.313 1266.24 140.477C1249.97 108.214 1194.62 -13.0305 963.525 1.14781C755.158 13.9317 705.624 286.837 489.402 270.86C405.435 264.656 322.714 147.648 178.05 162.846Z"); }
+    10%   { d: path("M187.283 184.143C71.3935 184.143 -20.3313 327.383 3.91343 343.126C14.857 350.233 100.499 262.335 203.699 297.917C266.243 319.482 370.692 434 453.096 434C550.823 434 676.707 382.349 757.581 292.712C830.711 211.657 932.994 137.381 1016.36 152.911C1112.16 170.758 1127.02 312.79 1241.51 331.38C1291.2 339.449 1356.31 312.653 1389.71 276.352C1395.96 269.554 1300.58 300.894 1258.72 216.119C1240.59 179.397 1168.45 -10.6808 957.724 0.471397C750.268 11.4504 697.022 241.402 484.369 281.558C402.138 297.086 331.136 184.143 187.283 184.143Z"); }
+    20%   { d: path("M184.57 180.303C69.5148 164.199 -8.63172 260.701 0.76439 270.134C11.7356 277.661 102.524 250.776 201.025 300.071C282.881 341.038 368.415 434 451.016 434C566.57 434 663.435 366.157 756.224 282.74C867.516 182.687 931.332 124.033 1015.62 136.206C1151.99 155.901 1148.07 270.134 1241.3 295.345C1318.91 316.331 1370.63 240.197 1389.85 192.929C1393.45 184.069 1330.67 236.258 1258.56 164.546C1228.16 134.319 1168.07 -11.1341 956.842 0.680915C768.774 11.2004 724.888 173.212 482.362 252.782C349.044 296.522 291.512 195.271 184.57 180.303Z"); }
+    30%   { d: path("M182.269 240.424C84.1787 177.405 -8.64207 233.453 0.642618 243.921C11.4838 252.273 30.8539 206.327 182.269 365.444C278.001 466.045 397.93 436.259 445.554 399.54C592.6 286.166 615.719 225.248 732.561 181.848C870.4 130.648 960.48 152.384 1017.53 167.859C1136.79 200.207 1132.45 236.139 1226.47 254.412C1318.64 272.327 1387.67 214.196 1389.88 208.076C1393.44 198.244 1314.77 225.584 1243.52 146.003C1213.48 112.458 1091.11 0 949.387 0C707.789 0 613.957 146.877 476.53 231.681C343.699 313.648 274.804 299.874 182.269 240.424Z"); }
+    40%   { d: path("M176.736 265.595C99.1548 182.677 -8.75763 143.205 0.565736 153.427C121.077 285.556 61.0715 280.626 151.431 367.683C232.901 446.175 361.413 417.367 441.154 357.595C599.447 238.943 585.394 149.036 729.396 142.595C901.144 134.913 923.731 252.219 1015.59 307.595C1078.63 345.595 1145.34 344.91 1225.43 317.595C1330.63 281.711 1387.32 177.335 1389.55 171.36C1393.12 161.76 1322.63 218.891 1242.55 215.595C1118.12 210.473 1004.17 121.52 947.156 78.595C803.153 -29.8142 580.453 -27.5541 472.263 94.5949C407.162 168.094 308.661 406.595 176.736 265.595Z"); }
+    50%   { d: path("M214.246 318.74C98.5074 341.758 28.938 199.044 2.04931 186.548C-4.98394 183.28 -2.14734 337.994 149.921 420.02C221.857 458.823 366.019 410.33 435.113 354.254C550.182 260.865 562.518 138.478 718.848 174.053C825.78 198.386 845.684 373.326 1000.57 402.921C1101.38 422.183 1175.29 404.109 1207.12 391.083C1239.27 377.93 1376.98 320.712 1389.99 201.017C1390.86 193.062 1333.07 232.134 1223.98 279.279C1102.24 331.893 991.156 280.076 933.203 185.89C801.283 -28.509 570.684 -38.1756 465.735 59.6173C336.576 179.97 342.201 293.291 214.246 318.74Z"); }
+    60%   { d: path("M176.736 265.595C99.1548 182.677 -8.75763 143.205 0.565736 153.427C121.077 285.556 61.0715 280.626 151.431 367.683C232.901 446.175 361.413 417.367 441.154 357.595C599.447 238.943 585.394 149.036 729.396 142.595C901.144 134.913 923.731 252.219 1015.59 307.595C1078.63 345.595 1145.34 344.91 1225.43 317.595C1330.63 281.711 1387.32 177.335 1389.55 171.36C1393.12 161.76 1322.63 218.891 1242.55 215.595C1118.12 210.473 1004.17 121.52 947.156 78.595C803.153 -29.8142 580.453 -27.5541 472.263 94.5949C407.162 168.094 308.661 406.595 176.736 265.595Z"); }
+    70%   { d: path("M182.269 240.424C84.1787 177.405 -8.64207 233.453 0.642618 243.921C11.4838 252.273 30.8539 206.327 182.269 365.444C278.001 466.045 397.93 436.259 445.554 399.54C592.6 286.166 615.719 225.248 732.561 181.848C870.4 130.648 960.48 152.384 1017.53 167.859C1136.79 200.207 1132.45 236.139 1226.47 254.412C1318.64 272.327 1387.67 214.196 1389.88 208.076C1393.44 198.244 1314.77 225.584 1243.52 146.003C1213.48 112.458 1091.11 0 949.387 0C707.789 0 613.957 146.877 476.53 231.681C343.699 313.648 274.804 299.874 182.269 240.424Z"); }
+    80%   { d: path("M184.57 180.303C69.5148 164.199 -8.63172 260.701 0.76439 270.134C11.7356 277.661 102.524 250.776 201.025 300.071C282.881 341.038 368.415 434 451.016 434C566.57 434 663.435 366.157 756.224 282.74C867.516 182.687 931.332 124.033 1015.62 136.206C1151.99 155.901 1148.07 270.134 1241.3 295.345C1318.91 316.331 1370.63 240.197 1389.85 192.929C1393.45 184.069 1330.67 236.258 1258.56 164.546C1228.16 134.319 1168.07 -11.1341 956.842 0.680915C768.774 11.2004 724.888 173.212 482.362 252.782C349.044 296.522 291.512 195.271 184.57 180.303Z"); }
+    90%   { d: path("M187.283 184.143C71.3935 184.143 -20.3313 327.383 3.91343 343.126C14.857 350.233 100.499 262.335 203.699 297.917C266.243 319.482 370.692 434 453.096 434C550.823 434 676.707 382.349 757.581 292.712C830.711 211.657 932.994 137.381 1016.36 152.911C1112.16 170.758 1127.02 312.79 1241.51 331.38C1291.2 339.449 1356.31 312.653 1389.71 276.352C1395.96 269.554 1300.58 300.894 1258.72 216.119C1240.59 179.397 1168.45 -10.6808 957.724 0.471397C750.268 11.4504 697.022 241.402 484.369 281.558C402.138 297.086 331.136 184.143 187.283 184.143Z"); }
+    100%   { d: path("M178.05 162.846C62.4617 174.99 -20.0967 311.653 4.286 325.184C15.2919 331.292 89.9809 246.583 207.928 264.467C307.927 279.63 376.786 392.943 452.455 420.414C540.509 452.382 672.861 426.768 762.242 355.863C925.777 226.131 917.914 140.477 1022.49 140.477C1141.21 140.477 1160.87 238.275 1248.93 283.013C1277.71 297.636 1356.09 309.1 1389.67 277.9C1395.17 272.787 1330.7 268.313 1266.24 140.477C1249.97 108.214 1194.62 -13.0305 963.525 1.14781C755.158 13.9317 705.624 286.837 489.402 270.86C405.435 264.656 322.714 147.648 178.05 162.846Z"); }
+}
+
+@supports (d: path("M0 0")) {
+    .squiggle path {
+        animation: squiggleMorph 30s linear infinite;
+    }
+}
