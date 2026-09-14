@@ -120,8 +120,16 @@ body{
     bottom: 13%;
     /* clamp, not a bare vw -- these set their own font-size directly (a
        parent .welcomeText font-size never reaches them), so this is the
-       only thing bounding the headline on a phone or an ultra-wide monitor. */
-    font-size: clamp(5.6rem, 9vw, 8.5rem);
+       only thing bounding the headline on a phone or an ultra-wide monitor.
+       Floor lowered to 2.2rem (was 5.6rem): that old floor only stopped
+       mattering above ~995px viewport width (9vw already clears it there),
+       so every narrower screen -- a 990px tablet down to a 375px phone --
+       got the exact same flat 89.6px text regardless of how little room
+       it had, overflowing the narrowest ones instead of shrinking to fit.
+       Ultra/Bevan (the new --font-thick fallbacks) set much wider glyphs
+       than Recoleta Alt at that same size, which is what pushed this from
+       "a bit tight" to actually clipping on phones. */
+    font-size: clamp(2.2rem, 9vw, 8.5rem);
 }
 .toMy{
     position: relative;
@@ -130,7 +138,7 @@ body{
     display: flex;
     justify-content: flex-end;
     line-height: 0.8;
-    font-size: clamp(5.6rem, 9vw, 8.5rem);
+    font-size: clamp(2.2rem, 9vw, 8.5rem);
 }
 
 .soup_image{
