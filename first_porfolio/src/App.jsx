@@ -14,10 +14,15 @@ import { DesignPage } from './components/DesignPage/DesignPage';
 import { Gallery } from './components/Gallery/Gallery';
 import { Receipt } from './components/Receipt/Receipt';
 import { MobileWarning } from './components/MobileWarning/MobileWarning';
+import { Loader } from './components/Loader/Loader';
+import { useAssetPreload } from './components/Loader/useAssetPreload';
 
 const PROJECT_COUNT = 4;
 const DESIGN_COUNT = 3;
 const SMALL_SCREEN_QUERY = '(max-width: 768px)';
+// Must match the opacity transition on Loader's backdrop, so the loading
+// screen is only unmounted once it has actually faded out.
+const LOADER_FADE_MS = 500;
 
 // Which project page (if any) the URL hash points at: #project/1 .. #project/4.
 function readProjectHash() {
@@ -111,11 +116,32 @@ function App() {
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
-  if (isSmallScreen && !smallScreenAcknowledged) {
+  // The first screen is image-heavy, so without this the Hero's letters, bowl
+  // and spoon trickle in one at a time and the page looks half-built. Hold a
+  // loading screen until they're decoded, then fade it away over the finished
+  // page. Preloading waits while the small-screen notice is up -- no sense
+  // pulling megabytes down before the visitor has said they want to continue.
+  const showMobileWarning = isSmallScreen && !smallScreenAcknowledged;
+  const { progress, ready } = useAssetPreload(!showMobileWarning);
+  const [loaderFadingOut, setLoaderFadingOut] = useState(false);
+  const [loaderMounted, setLoaderMounted] = useState(true);
+
+  useEffect(() => {
+    if (!ready) return;
+    setLoaderFadingOut(true);
+    const t = window.setTimeout(() => setLoaderMounted(false), LOADER_FADE_MS);
+    return () => window.clearTimeout(t);
+  }, [ready]);
+
+  if (showMobileWarning) {
     return <MobileWarning onContinue={() => setSmallScreenAcknowledged(true)} />;
   }
 
-  return <div className={styles.App}>
+  return <>
+    {loaderMounted && <Loader progress={progress} fadingOut={loaderFadingOut} />}
+    {/* Mounted only once the assets are in, so the fade above reveals a
+        finished page rather than one still assembling itself. */}
+    {ready && <div className={styles.App}>
     <Hero />
     <Menu
       onSelectProject={setActiveToastIndex}
@@ -156,7 +182,8 @@ function App() {
     {openReceipt && (
       <Receipt onClose={() => setOpenReceipt(false)} />
     )}
-  </div>;
+    </div>}
+  </>;
 }
 
 export default App;

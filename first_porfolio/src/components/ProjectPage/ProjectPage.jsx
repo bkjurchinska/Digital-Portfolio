@@ -278,19 +278,20 @@ export const ProjectPage = ({ index, onIndexChange, onClose }) => {
                     <div className={styles.bookingVideos}>
                         <iframe
                             className={styles.bookingVideo}
-                            src="https://www.youtube.com/embed/UjsjpQSKxj0"
+                            // autoplay=1 + mute=1: browsers only allow autoplay when muted,
+                            // unmuted won't play without a click no matter what's set here.
+                            src="https://www.youtube.com/embed/UjsjpQSKxj0?autoplay=1&mute=1&playsinline=1"
                             title="Booking app demo A"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowFullScreen
                         />
-                        {/* TODO: add the bookingB YouTube embed here once that link is ready, e.g.
                         <iframe
                             className={styles.bookingVideo}
-                            src="https://www.youtube.com/embed/VIDEO_ID_B"
+                            src="https://www.youtube.com/embed/gHB_YmCYZOs?autoplay=1&mute=1&playsinline=1"
                             title="Booking app demo B"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowFullScreen
-                        /> */}
+                        />
                     </div>
                 )}
                 {index === 0 && (
