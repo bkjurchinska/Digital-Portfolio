@@ -1,17 +1,3 @@
-// Images for the Gallery page (opened from the printed ticket in the
-// "Chef's Specials" section).
-//
-// To fill it: import the images here and list them in GALLERY, e.g.
-//
-//     import Piece1 from '../../assets/piece1.png';
-//     export const GALLERY = [
-//         { src: Piece1, title: 'Piece one', year: '2026' },
-//         // ...
-//     ];
-//
-// While GALLERY is empty the page shows placeholder tiles so the layout is
-// visible. `title` / `year` are optional captions. Order here is the order shown.
-
 import Pantone01 from '../../assets/Pantone/01-car.png';
 import Pantone02 from '../../assets/Pantone/02-pig.png';
 import Pantone03 from '../../assets/Pantone/03-Orange-marmalade.png';

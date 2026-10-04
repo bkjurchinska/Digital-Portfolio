@@ -9,14 +9,10 @@ html, body{
     max-width: 100%;
 }
 
-/* Hide scrollbar for Chrome, Safari and Edge Chromium */
 html::-webkit-scrollbar, body::-webkit-scrollbar {
     display: none;
 }
 
-html{
-    /* scroll-behavior: smooth; */
-}
 
 .App {
     background-color: var(--color-background);

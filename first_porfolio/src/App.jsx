@@ -20,11 +20,8 @@ import { useAssetPreload } from './components/Loader/useAssetPreload';
 const PROJECT_COUNT = 4;
 const DESIGN_COUNT = 3;
 const SMALL_SCREEN_QUERY = '(max-width: 768px)';
-// Must match the opacity transition on Loader's backdrop, so the loading
-// screen is only unmounted once it has actually faded out.
 const LOADER_FADE_MS = 500;
 
-// Which project page (if any) the URL hash points at: #project/1 .. #project/4.
 function readProjectHash() {
   const m = window.location.hash.match(/^#project\/(\d+)$/);
   if (!m) return null;
@@ -32,7 +29,6 @@ function readProjectHash() {
   return n >= 0 && n < PROJECT_COUNT ? n : null;
 }
 
-// Which design page (if any) the URL hash points at: #design/1 .. #design/3.
 function readDesignHash() {
   const m = window.location.hash.match(/^#design\/(\d+)$/);
   if (!m) return null;
@@ -40,14 +36,10 @@ function readDesignHash() {
   return n >= 0 && n < DESIGN_COUNT ? n : null;
 }
 
-// The Gallery overlay is a plain on/off, reached from the printed ticket in the
-// "Chef's Specials" section: #gallery.
 function readGalleryHash() {
   return window.location.hash === '#gallery';
 }
 
-// The Receipt overlay is a plain on/off, reached from the "Get receipt and
-// pay" button in the "Chef's Specials" section: #receipt.
 function readReceiptHash() {
   return window.location.hash === '#receipt';
 }
@@ -55,21 +47,16 @@ function readReceiptHash() {
 function App() {
   console.log("normalizeScroll active?", !!window.gsap?.core?.globals()?.normalizeScroll);
 
-  // null = nothing open; otherwise 0-based index of the open project / design.
-  // Seeded from the URL hash so a refresh keeps you on the open page.
   const [openProject, setOpenProject] = useState(readProjectHash);
   const [openDesign, setOpenDesign] = useState(readDesignHash);
   const [openGallery, setOpenGallery] = useState(readGalleryHash);
   const [openReceipt, setOpenReceipt] = useState(readReceiptHash);
-  // Which toast the Projects carousel is showing -- lifted up here so the
-  // Menu can point the carousel at a specific project before scrolling to it.
+  
   const [activeToastIndex, setActiveToastIndex] = useState(0);
   const prevOverlayOpen = useRef(
     openProject !== null || openDesign !== null || openGallery || openReceipt
   );
 
-  // Small-screen notice: this site isn't designed for phone-sized viewports,
-  // so warn and let the visitor opt in to continuing anyway.
   const [isSmallScreen, setIsSmallScreen] = useState(
     () => window.matchMedia(SMALL_SCREEN_QUERY).matches
   );
@@ -82,9 +69,6 @@ function App() {
     return () => mql.removeEventListener('change', onChange);
   }, []);
 
-  // Mirror the open overlay into the URL hash. Opening (from nothing) pushes a
-  // history entry so the browser Back button closes it; switching pages or
-  // closing just replaces it, so arrow-key navigation doesn't pile up history.
   useEffect(() => {
     const wasOpen = prevOverlayOpen.current;
     const isOpen = openProject !== null || openDesign !== null || openGallery || openReceipt;
@@ -104,7 +88,6 @@ function App() {
     }
   }, [openProject, openDesign, openGallery, openReceipt]);
 
-  // Follow browser Back/Forward (and any manual hash edit).
   useEffect(() => {
     const onHashChange = () => {
       setOpenProject(readProjectHash());
@@ -116,11 +99,6 @@ function App() {
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
-  // The first screen is image-heavy, so without this the Hero's letters, bowl
-  // and spoon trickle in one at a time and the page looks half-built. Hold a
-  // loading screen until they're decoded, then fade it away over the finished
-  // page. Preloading waits while the small-screen notice is up -- no sense
-  // pulling megabytes down before the visitor has said they want to continue.
   const showMobileWarning = isSmallScreen && !smallScreenAcknowledged;
   const { progress, ready } = useAssetPreload(!showMobileWarning);
   const [loaderFadingOut, setLoaderFadingOut] = useState(false);
@@ -139,8 +117,6 @@ function App() {
 
   return <>
     {loaderMounted && <Loader progress={progress} fadingOut={loaderFadingOut} />}
-    {/* Mounted only once the assets are in, so the fade above reveals a
-        finished page rather than one still assembling itself. */}
     {ready && <div className={styles.App}>
     <Hero />
     <Menu

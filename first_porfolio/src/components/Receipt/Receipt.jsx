@@ -12,16 +12,8 @@ import CVFile from '../../assets/CV_ENG.pdf';
 
 gsap.registerPlugin(ScrambleTextPlugin);
 
-// Barcode bar widths (px) -- same fixed, repeating pattern the entrance
-// ticket in Paintings uses, so the two printed props read as a set.
 const BARS = Array.from({ length: 40 }, (_, i) => [1, 2, 3, 2, 4, 1, 3][i % 7]);
 
-// Full-screen "Receipt" page, reached from the "Get receipt and pay" button
-// next to the entrance ticket in the Chef's Specials section. `onClose`
-// dismisses it (button or Escape). A printed receipt "settles the bill" for
-// the visit: every course of the site gets a line item, and the footer
-// carries the real contact details. The slip scrambles its total into place
-// and gives a light tear-off as soon as the page opens.
 export const Receipt = ({ onClose }) => {
     const backdropRef = useRef(null);
     const containerRef = useRef(null);
@@ -37,24 +29,11 @@ export const Receipt = ({ onClose }) => {
         };
     }, []);
 
-    // A fresh random order number each time the receipt prints.
     const orderNumber = useMemo(
         () => String(Math.floor(100000 + Math.random() * 900000)),
         [],
     );
 
-    // Every time this page opens, scroll to the top and print the slip out,
-    // then scramble the total into place. This page is only ever mounted
-    // while open (App.jsx conditionally renders it), so `torn` resets to
-    // false and this effect reruns from scratch on every single open --
-    // closing and reopening always replays the print-out.
-    //
-    // The slip is already fully on-screen the moment this page mounts (no
-    // scrolling needed to bring it into view), so an IntersectionObserver
-    // would fire almost immediately -- often before the browser has painted
-    // the tucked-away starting position, which can skip the transition
-    // entirely. A double requestAnimationFrame guarantees that first paint
-    // happens before we flip to the settled state.
     useEffect(() => {
         backdropRef.current?.scrollTo(0, 0);
         setTorn(false);
@@ -79,7 +58,6 @@ export const Receipt = ({ onClose }) => {
         };
     }, []);
 
-    // Escape closes the page; body scroll is frozen behind it while it's open.
     useEffect(() => {
         const onKey = (e) => {
             if (e.key === 'Escape') onClose();
@@ -134,7 +112,6 @@ export const Receipt = ({ onClose }) => {
             </div>
 
             <div className={styles.receiptCol}>
-                {/* <div className={styles.backgr_rect} aria-hidden="true" /> */}
                 <div
                     className={`${styles.slip} ${torn ? styles.torn : ''}`}
                     ref={slipRef}
@@ -221,7 +198,6 @@ export const Receipt = ({ onClose }) => {
                 <img src={CoffeeCup} className={styles.coffeeCup} alt="" />
                 <img src={Coffee} className={styles.coffee} alt="" />
                 <img src={CoffeeFoam} className={styles.coffeeFoam} alt="" />
-                {/* <img src={Plate} className={styles.plate} alt="" /> */}
                 <img src={Cinammon} className={styles.cinammon} alt="" />
             </div>
             </section>

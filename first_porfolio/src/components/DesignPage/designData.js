@@ -1,21 +1,3 @@
-// The three "Design" pages, opened by clicking the sardines in the Design
-// section (sardine 1 -> DESIGNS[0], and so on).
-//
-// To fill a gallery: import the images at the top of this file and list them in
-// that page's `gallery` array, e.g.
-//
-//     import Poster from '../../assets/poster.png';
-//     ...
-//     gallery: [Poster, /* ... */],
-//
-// While `gallery` is empty the page shows placeholder tiles so the layout is
-// visible. Order in the array is the order shown.
-//
-// A page can instead be split into titled sub-sections (used by "Characters"):
-// give it a `sections` array of { title, description, gallery: [] } instead of a
-// single `gallery`. Each renders under a divider with its own heading, blurb and
-// small image grid.
-
 import SipPaint1 from '../../assets/sipPaint1.svg';
 import SipPaint2 from '../../assets/sipPaint2.svg';
 import SipPaint3 from '../../assets/sipPaint3.svg';
@@ -67,8 +49,6 @@ export const DESIGNS = [
             'I draw inspiration for my characters from the most obscure places. '
             + 'For this particular collection, I drew inspiration from my old collection of LPS toys, and I drew them as people in different styles and time periods.',
         accent: '#8CABFF',
-        // Each section renders as: title, then a character "card" on the left
-        // (intro + the `card` label/value lines) and a small gallery on the right.
         sections: [
             {
                 title: 'Roman Warrior',
@@ -85,14 +65,9 @@ export const DESIGNS = [
                     { label: 'Powers', value: 'Strength, master strategist, very fast runner and hightened senses. She can also make healing ointments from natural ingredients.'},
                     { label: 'Weaknesses', value: 'Gets overwhelmes by loud noise and chaos; too stubborn for her own good.'}
                 ],
-                // Picture shown in the top half of the character card.
                 cardImage: HS_Bunny,
-                // 'feature' layout: image 1 runs the full height of the card on
-                // the left, image 2 sits top-right, images 3 & 4 below it.
-                // Photos show in full (not cropped). Order here = that placement.
                 gallery: [FB_Bunny, Shield, A_Bunny, HS_Bunny],
                 galleryLayout: 'feature',
-                // cardColor: '#E2B4BD',
             },
             {
                 title: 'Alien',
@@ -111,9 +86,6 @@ export const DESIGNS = [
                     { label: 'Weaknesses', value: 'Too gullible sometimes; super bright light blind her.' },
                 ],
                 cardImage: HS_Alien,
-                // 'feature' slots: right col = [idx0 top, idx3 bottom],
-                // left col = [idx1 top, idx2 bottom]. So this order stacks
-                // headShots under fullBody, and assets under powers.
                 gallery: [FB_Alien, Powers_Alien, Assets_Alien, HS_Alien],
                 galleryLayout: 'feature',
             },

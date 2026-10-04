@@ -5,9 +5,6 @@
   width: 150%;
   height: auto;
   display: flex;
-  /* Clips everything outside this box, so the previous/next toasts (each
-     exactly one carousel-width to either side, see .toastTextWrapper) are
-     fully off-screen instead of peeking in. */
   overflow: hidden;
   border-radius: 10px;
 }
@@ -17,45 +14,22 @@
   flex-wrap: nowrap;
   width: 100%;
   transition: transform 0.5s ease-in-out;
-  /* Each .toastTextWrapper is exactly one .carousel width (flex: 0 0 100%),
-     so translateX(-index * 100%) drops every slide dead-centre in the carousel
-     viewport -> centred on the plate. No `gap` here on purpose: a gap makes
-     slide N sit N*gap px to the side of centre, which is the drift you saw. */
 }
 
 .carouselImage{
-  /* cqw, not a bare/commented-out width -- below 1024px this had NO width
-     rule at all (the media query further down only applies >=1024px), so
-     the toast fell back to its native intrinsic pixel size: fine right
-     down to 1024px, then a sudden jump to a fixed, non-scaling size below
-     it. cqw ties it to .toastTextWrapper's own width (already a query
-     container, used by the overlay labels) at every size, no breakpoint
-     needed. */
   width: 45cqw;
   height: auto;
   flex-shrink: 1;
   object-fit: cover;
   margin-right: 0;
   display: block;
-  pointer-events: auto;   /* the real click / hover target (see .toastTextWrapper) */
-  /* background-color: red; */
+  pointer-events: auto;   
 }
 .carouselImage1 { 
   scale: 0.85;
-  /* background-color: darkblue; */
  }
 .carouselImage2 { scale: 0.8; }
 
-/* Per-label placement knobs (were the margin hacks).
-   --nudge-x / --nudge-y are in cqw = 1% of the carousel's width (see
-   .toastTextWrapper container-type), so each label keeps its spot on the toast
-   at any viewport size and no longer depends on the track width. The numbers
-   below are the old margin values 1:1 -- tweak a pair if a label looks off.
-   --text-scale replaces the old `scale:` on each label. */
-/* .overlayText1 { --text-scale: 0.85; --nudge-x: -3.8cqw; --nudge-y: -5cqw;   }
-.overlayText2 { --text-scale: 0.8;  --nudge-x: -4.5cqw; --nudge-y: -6.5cqw; }
-.overlayText3 { --text-scale: 1.05; --nudge-x: 2cqw;    --nudge-y: 2cqw;    }
-.overlayText4 { --text-scale: 1.1;  --nudge-x: 1cqw;    --nudge-y: -4cqw;   } */
 
 .overlayText1{
   scale: 0.8;
@@ -78,8 +52,6 @@
   margin-left: 0.5%;
 }
 
-/* Hover lives on the image/label now (the wrapper is pointer-events:none), so
-   match a hovered child with :has() instead of hovering the wrapper. */
 .toastTextWrapper:has(:hover) .carouselImage {
   transform: scale(1.05);
   transition: 0.5s ease-in-out;
@@ -92,24 +64,14 @@
 
 .wrapper {
   position: absolute;
-  /* cqw, not 6vh -- this is the toast's own position on the plate, and vh
-     doesn't track the Projects section's width at all, so it drifted away
-     from the (width-scaled) plate as the window got narrower. Resolves
-     against Projects' .container, the nearest ancestor with
-     container-type set. */
   top: 3.25cqw;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
-  /* gap: 18px; */
   width: 100%;
   z-index: 999;
-  /* This box spans the whole section and sits above the fork/knife (z-index
-     20). Without this, its transparent flex gutters swallow the pointer over
-     the cutlery so their drag/hover never fires. Interactive children below
-     opt back in with pointer-events: auto. */
   pointer-events: none;
   /* background-color: red; */
 }
@@ -117,8 +79,6 @@
 /*Full window*/
 @media (min-width: 1024px){
     .carouselImage {
-        /* width now comes from the base rule (45cqw) at every size --
-           this stays just for the margin reset. */
         height: auto;
         margin: 0;
     }
@@ -137,15 +97,8 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  /* The wrapper box is far wider than the toast and overlaps the fork/knife.
-     Only the toast image + its label should be clickable; the empty sides stay
-     transparent to pointer events so the cutlery underneath still works.
-     onClick/onMouseEnter live on this div but still fire via bubbling. */
   pointer-events: none;
-  /* makes 1cqw == 1% of a slide's (== the carousel's) width, used by the
-     .overlayText nudges so they don't depend on the label's own aspect ratio. */
   container-type: inline-size;
-  /* background-color: violet; */
 }
 
 .overlayText{
@@ -157,8 +110,6 @@
   cursor: pointer;
   pointer-events: auto;
   opacity: 0;
-  /* one transform: centre it, then the per-label nudge, then the per-label scale.
-     nudges default to 0 so this line is self-contained. */
   transform: translate(calc(-50% + var(--nudge-x, 0cqw)), calc(-50% + var(--nudge-y, 0cqw)))
              scale(var(--text-scale, 1));
   transform-origin: center center;

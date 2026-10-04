@@ -15,15 +15,7 @@ body{
     gap: 30px;
     align-items: center;
     justify-content: space-between;
-    /* background-color: aquamarine; */
     margin-top: 10%;
-    /* 0, not a positive value: this still needs to be a stacking context (so
-       the decorative -1/-2 z-index children below stay confined inside Hero
-       instead of sinking under the whole page), but a positive z-index here
-       made the entire Hero section -- including the parts that visually
-       spill past its own box, like the soup letters and buttons -- paint
-       above every later sibling section regardless of DOM order, which is
-       what was silently blocking clicks on the Menu section beneath it. */
     z-index: 0;
     margin-left: 5%;
     margin-right: 10%;
@@ -38,14 +30,10 @@ body{
     flex: 1;
     width: 100%;
     max-width: 600px;
-    /* min, not a fixed height -- a fixed box clipped the headline on
-       narrow screens where the text wraps to more lines than the desktop
-       layout this was tuned for. */
     min-height: 420px;
     align-items: flex-start;
     color: var(--color-text);
     z-index: 1;
-    /* background-color: red; */
 }
 
 .introImg{
@@ -60,8 +48,6 @@ body{
     max-width: 600px;
     width: 100%;
     height: auto;
-    /* clamp, not a bare vw -- unbounded vw either shrinks to unreadable on
-       a phone or balloons on an ultra-wide monitor. */
     font-size: clamp(1.1rem, 3vw, 1.8rem);
     font-weight: 700;
     font-style: normal;
@@ -87,7 +73,6 @@ body{
 }
 .infoImg{
     width: 100%;
-    /* background-color: red; */
 }
 
 .welcomeText{
@@ -99,11 +84,6 @@ body{
     font-family: var(--font-thick);
     font-style: normal;
     margin-left: 0;
-    /* Right-aligned so "Welcome"/"to my" sit against the right edge of this
-       column, next to the maroon rectangle in .imageContainer -- doesn't
-       actually reach .welcome/.toMy themselves since they're flex
-       containers (justify-content below does the real work), but keeps
-       any other inline content in here consistent. */
     text-align: right;
     font-weight: 700;
     /* font-size: 9vw; */
@@ -116,20 +96,8 @@ body{
     display: flex;
     justify-content: flex-end;
     position: relative;
-    /* margin-top: -7%; */
     bottom: 13%;
-    /* clamp, not a bare vw -- these set their own font-size directly (a
-       parent .welcomeText font-size never reaches them), so this is the
-       only thing bounding the headline on a phone or an ultra-wide monitor.
-       Floor lowered to 2.2rem (was 5.6rem): that old floor only stopped
-       mattering above ~995px viewport width (9vw already clears it there),
-       so every narrower screen -- a 990px tablet down to a 375px phone --
-       got the exact same flat 89.6px text regardless of how little room
-       it had, overflowing the narrowest ones instead of shrinking to fit.
-       Ultra/Bevan (the new --font-thick fallbacks) set much wider glyphs
-       than Recoleta Alt at that same size, which is what pushed this from
-       "a bit tight" to actually clipping on phones. */
-    font-size: clamp(2.6rem, 9vw, 8.5rem);
+    font-size: clamp(5.6rem, 9vw, 8.5rem);
 }
 .toMy{
     position: relative;
@@ -138,7 +106,7 @@ body{
     display: flex;
     justify-content: flex-end;
     line-height: 0.8;
-    font-size: clamp(2.6rem, 9vw, 8.5rem);
+    font-size: clamp(5.6rem, 9vw, 8.5rem);
 }
 
 .soup_image{
@@ -147,12 +115,9 @@ body{
     width: 150%;
     bottom: 15%;
     right: 20%;
-    /* margin-bottom: 20%; */
-    /* max-width: 100%; */
     height: auto;
     object-fit: contain;
     flex-shrink: 1;
-    /* background-color: green; */
 }
 
 .imageContainer{
@@ -160,20 +125,8 @@ body{
     top: 20%;
     margin: 0;
     padding: 0;
-    /* 0, not auto: same fix as .container -- without an explicit z-index
-       here, this element never becomes its own stacking context, so its
-       children's z-index values (.letters is z-index 3) leak out and get
-       compared directly against .buttons/.checkMenu in .container's
-       stacking context, letting .letters paint (and eat clicks) on top of
-       the button wherever the two boxes happen to overlap. */
     z-index: 0;
-    /* Makes this a query container so descendants (the soup letters and the
-       floating confetti letters/years) can size and position themselves in
-       `cqw` -- a % of THIS box's own width -- instead of the viewport's.
-       That's what keeps the whole bowl+spoon+letters illustration scaling
-       together as one composition, in lockstep, at every window size. */
     container-type: inline-size;
-    /* background-color: blue; */
 }
 
 .spoon{
@@ -194,8 +147,6 @@ body{
 }
 
 @keyframes soupFloat{
-    /* No scale() here -- each element's size now comes from its own
-       (cqw-based) width, so the animation only ever handles the float. */
     0% { transform: translate(0,0) rotate(0deg);}
     22% { transform: translate(var(--float-x, 4px), calc(var(--float-y, -6px) * 0.6)) rotate(calc(var(--float-r, 4deg)*-0.5));}
     48%  { transform: translate(calc(var(--float-x, 4px) * -0.7), var(--float-y, -6px)) rotate(var(--float-r, 4deg)); }
@@ -204,22 +155,13 @@ body{
 }
 .letters{
     position: absolute;
-    /* max-width: 250%; */
     top: 18%;
     right: 5%;
     height: 50%;
     width: 100%;
-    /* border-radius: 50%; */
     z-index: 3;
-    /* background-color: orange; */
 }
 .letters img{
-   /* cqw, not vw -- ties the letter size to .imageContainer's own rendered
-      width (the query container) so it shrinks/grows in exact lockstep
-      with the soup bowl beneath it, at every window size. 16.17cqw
-      reproduces the original flat 95px at the container's own reference
-      width; clamped so it can't vanish on a tiny container or balloon on
-      a huge one. */
    width: clamp(30px, 16.17cqw, 100px);
    height: auto;
 }
@@ -234,9 +176,6 @@ body{
     top: 32%;
     left: 24%;
 }
-/* .p_image:hover{
-    transform: translate(10px, -10px) rotate(15deg);
-} */
 .o_image{
     position: absolute;
     top: 42%;
@@ -253,7 +192,6 @@ body{
     left: 38%;
     z-index: 2;
     transform-origin: center;
-    /* background-color: blue; */
 }
 .r_image:hover{
     transform: scale(1.5) translate(-10px, -10px) rotate(-15deg);
@@ -269,11 +207,9 @@ body{
 }
 .f_image{
     position: absolute;
-    /* width: 83px; */
     top: 25%;
     left: 55%;
     z-index: 1;
-    /* background-color: violet; */
 }
 .f_image:hover{
     transform: scale(1.5) translate(-5px, 15px) rotate(5deg);
@@ -289,11 +225,9 @@ body{
 }
 .l_image{
     position: absolute;
-    /* width: 82px; */
     top: 30%;
     left: 66%;
     z-index: 1;
-    /* background-color: brown; */
 }
 .i_image{
     position: absolute;
@@ -321,11 +255,6 @@ body{
         justify-content: space-between;
     }
     .imageContainer {
-        /* Explicit width, not just a cap -- .imageContainer is a flex item
-           here with no other width/flex-basis set, so without this its
-           size is resolved from its CONTENT (max-content), and container
-           containment (from container-type: inline-size below) explicitly
-           cuts that content->size dependency, collapsing it to 0 width. */
         width: 50%;
         max-width: 50%;
         height: auto;
@@ -342,109 +271,49 @@ body{
 }
 
 @media (max-width: 1024px) {
-    /* Symmetric margins once stacked -- the 5%/10% split exists to leave
-       room for the rectangle's bleed in the >=1024px row layout, but once
-       everything stacks and centers instead, an uneven frame just pushes
-       the whole stack off-centre. */
     .container{
         margin-left: 5%;
         margin-right: 5%;
     }
     .content{
         margin-right: 0;
-        /* Centers "Hi, I'm Bisera" too -- .content's cross axis (column
-           layout) was still flex-start, so the title stayed pinned to the
-           left edge even after everything below it centered. */
         align-items: center;
     }
-    /* .title is itself a flex container (for its own layout reasons), so
-       centering its text needs justify-content, not just the align-items
-       change above on its parent. */
     .title{
         justify-content: center;
     }
-    /* "Welcome"/"to my" centre on the page once stacked, instead of
-       hugging the (now nonexistent, since .imageContainer stacks below
-       instead of beside it) maroon rectangle's edge. */
     .welcomeText{
         text-align: center;
     }
     .welcome, .toMy{
         justify-content: center;
     }
-    /* .welcome has no line-height of its own (inherits 1.8 from
-       .welcomeText), so at this clamp's 5.6rem floor that's a ~161px line
-       box -- most of the gap above "to my" is that inherited line-height,
-       not the bottom:% offsets. Tightening it to 1 closes the gap without
-       touching either element's own size or position. */
     .welcome{
         line-height: 1;
     }
 
     .soup_image{
         margin-top: -20%;
-        /* Bigger + shifted up, per earlier requests -- translateX/Y in cqw
-           (not %, which for a transform function would resolve against
-           .soup_image's OWN box instead) so the shift stays proportional
-           to .imageContainer's width at any narrow size, matching how
-           everything else here scales. translateY pushed much further
-           (-14cqw, was -3cqw) per an explicit follow-up request to move
-           the bowl further up even if it crosses .backgr_rect's borders
-           -- .randomLetters is deliberately NOT given the same increase
-           this time (see below), so the bowl and the confetti
-           letters/years no longer track each other 1:1 like they used to.
-           translateX pulled back to -4.63cqw (was -12) per a later request
-           to re-center the bowl on .backgr_rect -- measured directly
-           against the rectangle's own rendered center, not eyeballed. */
         transform: scale(1.1) translateX(-4.63cqw) translateY(-14cqw);
         transform-origin: center;
     }
-    /* bottom raised further (18%, was 8%/-0.5%) to move the spoon up more
-       along with the bowl above. left still shifts it so its right edge
-       lands on .backgr_rect's right edge. */
     .spoon{
         bottom: 18%;
         left: -30%;
     }
-    /* Deliberately NOT kept in sync with .soup_image's translateY above
-       anymore (still -3cqw here, matching the bowl's OLD, smaller shift)
-       -- an explicit follow-up asked for the bowl to move further up
-       without moving these letters, so they now stay where they were
-       while the bowl moves independently above/below them. Still needs
-       its own explicit-point transform-origin, though: .randomLetters
-       itself has no width/height (every child is position:absolute, same
-       zero-size-wrapper situation as elsewhere in this codebase), so
-       transform-origin:center would just be its own anchor point, not
-       the bowl's center.
-       The extra `- 10px`/`+ 35px` in the calcs are flat nudges on top of
-       the cqw values, per follow-ups asking for an exact 10px lift and a
-       35px shift right (15, then 20 more; not %/cqw ones) -- calc() lets
-       the different units combine in one value. */
     .randomLetters{
         transform: scale(1.1) translateX(calc(-12cqw + 35px)) translateY(calc(-3cqw - 10px));
         transform-origin: 51cqw -47.06cqw;
     }
-    /* Caps + centers the whole bowl/spoon/letters illustration (and
-       everything scaled off its width via cqw) as one block, instead of
-       stretching it edge-to-edge -- which is also what was pushing
-       .backgr_rect's 120%-width bleed past the viewport's right edge. */
     .imageContainer{
         width: 100%;
         max-width: 480px;
         margin: 0 auto;
     }
-    /* Centered on .imageContainer instead of left-flush-then-bleed-right
-       (fine on a wide desktop row where there's margin to spare, but not
-       here) so the rectangle reads as centered under "Welcome"/"to my". */
     .backgr_rect{
         left: 50%;
         transform: translateX(-50%);
     }
-    /* Nudges the soup letters up onto the spoon and the floating
-       confetti letters/years down into the bowl -- both drift slightly
-       off their marks once the illustration is capped to this width.
-       top/right pushed further (2%/14%, was 10%/base 5%, briefly 18%)
-       so "PORTFOLIO" moves up together with the spoon above. */
     .letters{
         top: 2%;
         right: 14%;
@@ -452,13 +321,7 @@ body{
     .randomLetters{
         bottom: 6%;
     }
-    /* The absolute-positioned/fixed-width button trick below is tuned for
-       the >=1024px side-by-side row layout; once .infoImg stacks instead,
-       let the button flow normally under it rather than guessing at a %
-       offset against a totally different stacked height. Generous
-       margin-top because the illustration's own layout height (soup_image's
-       negative margin-top and % bottom/right offsets above are pure paint
-       shifts, not counted in it) undershoots where it actually paints. */
+    
     .buttons{
         position: static;
         width: 100%;
@@ -475,20 +338,6 @@ body{
         width: 160px;
         height: 52px;
         font-size: 16px;
-    }
-    /* The 420px min-height above (shared with the >=1024px row layout) was
-       sized for the desktop headline's full 8.5rem size. On an actual
-       phone the clamp() floor holds "Welcome"/"to my" much smaller, so
-       that same fixed floor just reserved a lot of dead space below the
-       text before the bowl started -- shrinking it here pulls the bowl
-       up closer underneath the headline. Kept well above 0 (rather than
-       auto) since .soup_image's own upward pull (margin-top:-20% + the
-       transform below) still needs somewhere to land without climbing
-       over the text -- measured empirically against real phone widths
-       (320-480px) rather than derived, since that pull's cqw/% terms
-       don't scale in step with .content's own height. */
-    .content{
-        min-height: 260px;
     }
 }
 
@@ -509,21 +358,10 @@ body{
     padding: 0;
     gap: 50px;
     transition: 0.5s ease;
-    /* Above .imageContainer's stacking context so its decorative art can
-       never sit on top of the button and swallow clicks. */
     z-index: 2;
     /* background-color: red; */
 }
 @media (max-width: 1024px) {
-    /* Nudges the button down a bit, per request. Has to come after the
-       base rule above (not in the earlier @media(max-width:1024px) block
-       with the rest of the narrow overrides, several of which -- position,
-       width, margin, justify-content -- are ALSO silently losing to this
-       same base rule for the same reason) purely because of source order:
-       that earlier block sits before this base rule in the file, so for
-       any property both set, the later base rule wins the cascade
-       regardless of the media query, same issue as .squiggle/.letters
-       elsewhere in this file. */
     .buttons{
         top: 96%;
     }
@@ -547,10 +385,6 @@ body{
     transition: 0.5s ease;
     z-index: 2;
 }
-/* .checkMenu:hover{
-    /* color: var(--color-secondary); 
-    font-weight: bold;
-} */
 
 .blob_inner{
     z-index: -1;
@@ -621,13 +455,6 @@ body{
   }
 }
 
-/* Every offset/size below is `cqw` -- a % of .imageContainer's own width,
-   the query container set up there -- instead of a flat px. They were
-   derived by measuring each element's actual rendered position/size
-   against .imageContainer at one reference width and converting to a %,
-   so right now they land in exactly the same spots as before; from here on
-   they scale with the container (and so with the soup bowl/spoon) instead
-   of staying pinned to a fixed pixel spot regardless of window size. */
 .random_a_image, .random_b_image, .random_c_image, .random_q_image, .random_s_image, .random_v_image{
     position: absolute;
     z-index: 1;
@@ -683,16 +510,6 @@ body{
     --float-delay: -4s;
 }
 @media (max-width: 1024px) {
-    /* Q/B/S/A/C nudged up ~5px individually (on top of the whole-group
-       .randomLetters transform elsewhere, which still moves them all
-       together), per a follow-up request -- +5px added via calc() so the
-       flat pixel nudge combines with each letter's existing cqw `bottom`.
-       The year numbers (2026) are deliberately left untouched. Has to
-       come after the base rules just above (not grouped with the rest of
-       the narrow overrides earlier in the file) purely because of source
-       order -- same cascade issue as .squiggle/.letters/.buttons
-       elsewhere in this file: a later same-specificity rule wins
-       regardless of the media query. */
     .random_a_image{ bottom: calc(70.11cqw + 5px); }
     .random_b_image{ bottom: calc(66.2cqw + 5px); }
     .random_c_image{ bottom: calc(59.22cqw + 5px); }
@@ -760,16 +577,8 @@ body{
 }
 .squiggle{
     position: absolute;
-    /* width: 220%;
-    height: auto;
-    bottom: 42%;
-    right: -20%; */
     bottom: 35%;
     right: -20%;
-    /* cqw, not the SVG's own hardcoded 1390x434 attributes -- reproduces
-       that same rendered size at .imageContainer's reference width (587.5px
-       -> 236.6cqw = 1390px), so it scales down with the rest of the
-       illustration instead of staying pinned to a fixed pixel size. */
     width: 236.6cqw;
     height: auto;
     z-index: -1;
@@ -779,24 +588,6 @@ body{
     animation: squiggleMorph 30s linear infinite;
 }
 @media (max-width: 1024px) {
-    /* Scaled down and re-centered instead of the desktop 236.6cqw/
-       right:-20% -- that bleeds ~460px past the LEFT edge here (the
-       rectangle no longer leaves room on that side once .imageContainer
-       stacks/centers below its own column instead of sitting in a row
-       next to .content), getting hard-clipped by body{overflow-x:hidden}
-       instead of just peeking out symmetrically like it does on the wide
-       layout. This has to come after the base .squiggle rule above (not
-       in the earlier @media(max-width:1024px) block with the rest of the
-       narrow overrides) purely because of source order -- that earlier
-       block sits BEFORE this base rule in the file, so for the properties
-       both set (width/right/transform), the later base rule was winning
-       the cascade regardless of the media query. */
-    /* 128cqw, not 100 -- the soup bowl grew (scale(1.1), see .soup_image
-       above) and now fully covers a squiggle sized to match
-       .imageContainer exactly. Bigger so it peeks out past the bowl again;
-       kept under ~130 so it still lands inside the viewport rather than
-       getting clipped by body{overflow-x:hidden} the way the original
-       236.6cqw did. */
     .squiggle{
         width: 145cqw;
         bottom: 40%;
@@ -805,9 +596,6 @@ body{
         transform: translateX(-50%);
     }
 }
-/* .squiggle path {
-    animation: squiggleMorph 9s ease-in-out infinite;
-} */
 
 @keyframes squiggleMorph {
     0%   { d: path("M178.05 162.846C62.4617 174.99 -20.0967 311.653 4.286 325.184C15.2919 331.292 89.9809 246.583 207.928 264.467C307.927 279.63 376.786 392.943 452.455 420.414C540.509 452.382 672.861 426.768 762.242 355.863C925.777 226.131 917.914 140.477 1022.49 140.477C1141.21 140.477 1160.87 238.275 1248.93 283.013C1277.71 297.636 1356.09 309.1 1389.67 277.9C1395.17 272.787 1330.7 268.313 1266.24 140.477C1249.97 108.214 1194.62 -13.0305 963.525 1.14781C755.158 13.9317 705.624 286.837 489.402 270.86C405.435 264.656 322.714 147.648 178.05 162.846Z"); }

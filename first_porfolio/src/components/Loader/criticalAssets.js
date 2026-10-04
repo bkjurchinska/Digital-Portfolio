@@ -1,12 +1,4 @@
-// The images that make up the first screen (the Hero soup bowl, its letters
-// and the spoon). These are deliberately the *same* module imports Hero.jsx
-// uses, so Vite resolves them to the identical hashed URLs -- preloading them
-// here warms the browser cache and Hero's own <img> tags then paint instantly
-// instead of trickling in one by one.
-//
-// Anything below the fold is left out on purpose: the assets folder is
-// hundreds of megabytes, and gating the whole site on it would mean staring
-// at a loading screen for minutes.
+
 import soupBowl from '../../assets/bowl.svg';
 import spoon from '../../assets/spoon.png';
 import P from '../../assets/P.png';
@@ -29,7 +21,6 @@ import Year22 from '../../assets/2026_22.png';
 import Year6 from '../../assets/2026_6.png';
 import Squiggle from '../../assets/squiggle.svg';
 
-// Deduped: Hero reuses O1.png for both O's, so the same URL can appear twice.
 export const criticalAssets = [...new Set([
   soupBowl, spoon,
   P, O, R, T, F, L, I, O2,

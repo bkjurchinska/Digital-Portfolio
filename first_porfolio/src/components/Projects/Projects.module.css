@@ -1,39 +1,18 @@
 @import '../../vars.css';
 
-*{
-    /* transition: 0.5s ease-in-out; */
-}
 
 .container{
     margin-top: 10%;
-    /* cqw, not a flat 134vh -- vh tracks the viewport's HEIGHT, completely
-       unrelated to how wide this section is, so every child below that used
-       vh/vw/px for its own position or size drifted apart from the
-       width-scaled stuff (the plate, the toast) as the window got
-       narrower. cqw ties everything to this section's own width instead,
-       so it scales as one piece at any window size. */
     height: 85cqw;
     padding-bottom: 2%;
-    /* `transform` shrinks how this section PAINTS but not how much room it
-       RESERVES in the page's normal flow -- that reservation is based on
-       the pre-transform (85cqw + padding) box, which is 1/0.6 bigger than
-       what's actually visible. Without this, that difference (85cqw *
-       (1 - 0.6) = 34cqw) shows up as a big blank gap before the next
-       section starts, however small its own top margin/padding is. */
     margin-bottom: -15.5cqw;
-    transform: scale(0.6);           /* was 0.75 -- shrinks the whole section */
-    transform-origin: 46.5% center;  /* pivot on the page's horizontal centre (the
-                                        point purple_rect is centred at) so the
-                                        hand-tuned left offsets stay centred at
-                                        any scale */
-    /* Query container so every cqw value below resolves against THIS box's
-       own width. */
+    transform: scale(0.6);         
+    transform-origin: 46.5% center;  
+   
     container-type: inline-size;
-    /* background-color: aqua; */
 }
 .carouselDiv{
     position: relative;
-    /* right: 5%; */
 }
 
 .title{
@@ -53,19 +32,6 @@
     width: 85%;
     top: 9.9cqw;
     left: 5%;
-    /* width: 768.21px; */
-    /* height: 777.11px; */
-    /* 50% centres on .container, which is pushed right of the page centre
-       (.App is 105% wide + 5% side padding) and then scaled 0.75 -> -10vw
-       lands it on the real page centre. translateX(-50%) replaces the old
-       fixed margin-left so it stays centred if the width changes. */
-    /* left: calc(50% - 10vw); */
-    /* left: 46.5%;
-    top: 19%;
-
-    background: #AA74A0;
-    border-radius: 24.0792px;
-    transform: translateX(-50%) matrix(0.73, 0.68, -0.74, 0.67, 0, 0); */
 }
 
 .intro{
@@ -78,25 +44,14 @@
     font-size: 2.5vw;
 }
 .plateDiv{
-    /* absolute, not relative -- as a normal-flow (relative) box its flow
-       height came from `height: 50%` of .container's own (vh-based, now
-       cqw-based) height, which the `top: 20vh` offset below was never
-       counted against either (relative offsets don't affect flow), so
-       .navPanelRow's flow position after it never actually matched where
-       this visually ended up. Absolute + a direct cqw offset removes that
-       mismatch entirely. */
     position: absolute;
     top: 10.9cqw;
     right: 3.5%;
     width: 100%;
     height: 50%;
-    /* background-color: hotpink; */
 }
 
 .plate{
-    /* One rule at every width, not a 100%-vs-65% jump at 1024px -- that
-       jump made the plate snap to a visibly different size right at the
-       breakpoint instead of scaling smoothly through it. */
     position: absolute;
     width: 65%;
     top: 1.1cqw;
@@ -104,18 +59,12 @@
     transform: translateX(-50%);
 }
 
-/* Text that scrambles in on toast hover, in the whitespace either side of the
-   plate. `top` is the vertical knob -- nudge it to line up with the toast. */
 .ingredients,
 .description{
     position: absolute;
     top: 50%;
-    /* narrow column so the fully-scrambled string doesn't reach the plate;
-       Geist Mono is monospace, so its footprint stays rock-steady while the
-       characters churn (already loaded via vars.css). */
     width: 23%;
     font-family: 'Geist Mono', 'Courier New', ui-monospace, monospace;
-    /* color: var(--purple); */
     color: #e0beda;
     font-size: 2vw;
     letter-spacing: 0.01em;
@@ -124,7 +73,6 @@
     transition: opacity 0.45s ease;
     pointer-events: none;
     z-index: 1000;
-    /* stops a scramble line-wrap from shifting layout mid-animation */
     white-space: pre-wrap;
     overflow-wrap: break-word;
 }
@@ -149,37 +97,22 @@
 .fork{
     left: 5%;
     top: 6.5cqw;
-    /* background-color: red; */
 }
 .knife{
     left: 74%;
     top: 6.5cqw;
 }
 
-/* Wraps the nav panel with the prev/next arrows flanking it on either side
-   (they used to sit out at the edges of the carousel instead). */
 .navPanelRow{
-    /* absolute + a direct cqw offset, not margin-top: 45% in normal flow --
-       the flow position it was pushing down from depended on .plateDiv's
-       own (vh-based) flow height, which never matched where .plateDiv
-       actually rendered once its `top` offset was applied. Same fix as
-       .plateDiv above. */
     position: absolute;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    /* Wide enough that the pressed-state icon (much bigger, and shifted
-       further out by its own translateX) never reaches the nav panel. */
     gap: 7.2cqw;
     top: 76.4cqw;
-    /* 46.5%, not 50% -- this container is scaled/offset (see .container's
-       transform-origin and the .purple_rect comment above), so 46.5% is
-       where the page's actual horizontal centre lands, same as the plate. */
     left: 46.5%;
     transform: translateX(-50%);
-    /* Above the carousel's .wrapper (z-index: 999) -- otherwise a peeking
-       side toast paints on top of the arrows and steals their clicks. */
     z-index: 1000;
 }
 
@@ -216,8 +149,6 @@
 .arrowL:hover, .arrowR:hover{
     transform: scale(1.08);
 }
-/* Pressed, like a physical key: drops the shadow and nudges the button down
-   instead of swapping in a second, bigger "pressed" icon. */
 .arrowL:active, .arrowR:active{
     transform: translateY(3px);
 }
@@ -228,8 +159,6 @@
     display: block;
     width: 4.8cqw;
     height: 4.2cqw;
-    /* Small, sharp (no blur) shadow in the section's purple, following the
-       icon's own rounded-square silhouette. */
     filter: drop-shadow(3px 3px 0 var(--purple));
     transition: filter 0.15s ease-in-out;
 }
@@ -246,12 +175,6 @@
 .smallEgg, .smallBanana {
     scale: 1.5;
 }
-/* These had no width/height at all -- each rendered at its raw intrinsic
-   SVG size, which doesn't scale with anything, so as the pill around them
-   shrunk (it's %-based, already responsive) the icons stayed full size and
-   spilled out past its edges, overlapping the arrow buttons. cqw ties each
-   one to the section's own width, same as everything else here; the
-   `scale:` above still applies on top exactly as before. */
 .smallEgg{
     width: 4.5cqw;
     height: 4.7cqw;
@@ -269,9 +192,6 @@
     height: 2.3cqw;
 }
 
-/* The nav icons: whichever toast is currently on the plate gets bumped up.
-   `transform` multiplies with each icon's base `scale:` above, so egg/banana
-   and avocado/blueberry all grow by the same proportion from their own size. */
 .navPanel img{
     transition: transform 0.35s ease, scale 0.35s ease;
     transform-origin: center;
@@ -283,6 +203,5 @@
 @media (max-width: 1024px){
     .knife, .fork{
         opacity: 0;
-        /* transition: 0.5s ease; */
     }
 }

@@ -1,6 +1,4 @@
-// The four project pages, in the same order as the carousel toasts
-// (egg, avocado, banana, blueberry). Clicking a toast in Projects opens the
-// matching entry; the page then links to the others. Edit text / names freely.
+
 import Toast1 from '../../assets/egg-toast.png';
 import Toast2 from '../../assets/avocado-toast.png';
 import Toast3 from '../../assets/banana-toast.png';
@@ -11,7 +9,6 @@ import Text3 from '../../assets/banana-text.png';
 import Text4 from '../../assets/blueberry-text.png';
 import Raccoon from '../../assets/raccoon.svg';
 import CompAnalysis from '../../assets/compAnalysis.svg';
-// import DesignAesthetics from '../../assets/designAesthetics.svg';
 import StatsNoMeals from '../../assets/stats-noMeals.svg';
 import StatsMealsSaved from '../../assets/stats-mealsSaved.svg';
 import FinalDeliveryPage from '../../assets/finalDeliveryPage.svg';
@@ -23,7 +20,6 @@ import RaccoonSketch1 from '../../assets/raccoonSketch1.png';
 import RaccoonSketch2 from '../../assets/raccoonSketch2.png';
 import GestaltMain from '../../assets/gestaltMain.svg';
 import FourGestalt from '../../assets/4gestalt.svg';
-// import Code from '../../assets/code.svg';
 import Home1 from '../../assets/home1.svg';
 import Home2 from '../../assets/home2.svg';
 import Date1 from '../../assets/date1.svg';

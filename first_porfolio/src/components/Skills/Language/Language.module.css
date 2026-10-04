@@ -2,75 +2,52 @@
 
 .title{
     font-size: 11vw;
-    /* margin-top: 3%; */
-    /* color: var(--color-text); */
     color: #5d69d3;
     position: relative;
-    z-index: 1;                 /* sits behind the illustration */
+    z-index: 1;                
     margin-bottom: -12vw;
-    /* cqw, not 7vh -- everything else here is vw (tracks the section's own
-       width already, since .App's side padding is a fixed %), but vh
-       tracks the viewport's HEIGHT, so on a differently-shaped window this
-       drifted out of sync with the vw-based illustration below it. */
     top: 6.1cqw;
 }
 .title2{
     font-size: 11vw;
     color: #5d69d3;
-    display: block;             /* full-width block so the flip lands it on the right */
+    display: block;           
     width: 100%;
-    transform: scale(-1, -1); /* Flips horizontally and vertically */
+    transform: scale(-1, -1); 
     -webkit-transform: scale(-1, -1); /* Safari/Chrome */
     -moz-transform: scale(-1, -1); /* Firefox */
     -o-transform: scale(-1, -1); /* Opera */
     -ms-transform: scale(-1, -1); /* IE 9+ */
-    text-align: left;          /* left in flow -> right side after the horizontal flip */
+    text-align: left;         
     position: relative;
-    z-index: 1;                 /* sits behind the illustration */
-    /* pull this word up so it overlaps the bottom of the illustration and sits
-       close to the top title -- both inside the blue band */
+    z-index: 1;             
     margin-top: -10vw;
     margin-bottom: 2%;
 }
 .container{
     margin-top: 4%;
-    /* 55vw, not 120vh -- same reasoning as .title's top below (tie this to
-       WIDTH, not viewport height, to match the vw-based contents), but
-       `cqw` can't be used here since this rule is on the query-container
-       element itself (a container can't reference its own size -- it
-       would just fall back to the viewport, i.e. plain vw anyway). .App's
-       side padding + Skills' own width:95% make this element a constant
-       ~85.5% of the viewport at any size. 55vw is just past where the
-       lowest content (the flipped "Design" title) actually ends, instead
-       of the much taller band this used to be. */
     min-height: 55vw;
     position: relative;
-    isolation: isolate;        /* keep the background squiggle's stacking local */
-    /* Query container so the cqw values above/below resolve against this
-       section's own width. */
+    isolation: isolate;   
     container-type: inline-size;
 }
 
-/* Scroll-reactive background squiggle -- mirrors the About section's blob. */
 .squiggleViewport{
     position: absolute;
     top: 0;
     bottom: 0;
-    /* break out of the .App 5% side padding so the band spans the whole window */
+
     left: -5.25vw;
     width: 100vw;
-    overflow: hidden;          /* mask the drifting shape to the section bounds */
-    z-index: 0;                /* behind the titles (z 1) and the tin (z 2) */
+    overflow: hidden;          
+    z-index: 0;              
     pointer-events: none;
     display: flex;
-    align-items: center;       /* vertical-centre the shape, whatever its height */
-    justify-content: center;   /* start centred so it has room to drift both ways */
+    align-items: center;       
+    justify-content: center;   
 }
 .squiggle{
     flex: 0 0 auto;
-    /* tall enough to cover the whole section so BOTH titles sit inside the
-       blue band; width stays proportional and far wider than the window, so
-       its side edges stay clipped through the scroll drift. */
     height: 100%;
     width: auto;
     max-width: none;
@@ -83,13 +60,10 @@
     right: 15%;
     top: 3.5vw;
     height: 43vw;
-    z-index: 2;                 /* illustration overlaps both titles */
-    transform: scale(0.92);      /* whole illustration (can, lid, key, fish) a touch smaller */
+    z-index: 2;     
+    transform: scale(0.92);      
 }
 
-/* can, lid and key-bar share one 2360x1640 canvas, so identical box =
-   alignment. Positioned with offsets (not transforms) so the click handler
-   is free to drive `transform` on the key bar. */
 .can, .lid, .roll{
     position: absolute;
     width: 62%;
@@ -101,22 +75,14 @@
 .can{
     z-index: 1;
     cursor: pointer;
-    /* 54%/18%, not 50%/20% -- a bit bigger, shifted left by half the extra
-       width so it grows from its own centre instead of just from its left
-       edge. */
     width: 54%;
     left: 18%;
 }
 .lid{
-    /* Must match .can's new width/left exactly -- the lid closes back over
-       the can, so if only the can grew this would no longer cover it. */
     width: 54%;
     left: 17%;
-    top: -0.25cqw; /* was -0.3vh -- same vh/vw mismatch as .title and .container above */
+    top: -0.25cqw; 
 }
-/* The three fish: above the can, below the lid/key. Start stacked over the
-   can (hidden by the closed lid); slide right on open, each a different
-   distance -- see the inline transforms in Language.jsx. */
 .sardine1, .sardine2, .sardine3{
     position: absolute;
     width: 40%;
@@ -124,7 +90,7 @@
     max-width: none;
     height: auto;
     z-index: 2;
-    pointer-events: none;      /* clicks fall through to the can */
+    pointer-events: none;   
     transition: transform 0.7s cubic-bezier(0.34, 1.28, 0.7, 1);
     will-change: transform;
 }
@@ -132,20 +98,11 @@
 .sardine2{ top: 45%; }
 .sardine3{ top: 58%; }
 
-/* --- Sardine hover preview ----------------------------------------------------
-   Each fish has a stack of pictures hidden dead-centre behind it. On hover each
-   one fans out to its own spot (--x/--y/--r/--w come from the `previews` /
-   `previews2` / `previews3` arrays in Language.jsx), staggered by --i. They tuck
-   BEHIND the fish (.sardineNInner, z-index 1) but the whole .sardineN wrapper is
-   lifted above the lid/key/titles (inline zIndex on hover), so the photos read
-   as slipping out from behind the fish while still sitting in front of
-   everything else on the page. The fish + its text pop up and scale a touch on
-   the same hover. Selectors here are shared by all three fish. */
 .previewScatter{
     position: absolute;
     inset: 0;
-    z-index: 0;                /* behind the fish (z-index 1), ahead of nothing else */
-    pointer-events: none;      /* never intercept the hover meant for the fish */
+    z-index: 0;                
+    pointer-events: none;     
 }
 .previewPhoto{
     position: absolute;
@@ -154,10 +111,8 @@
     width: var(--w, 13vw);
     height: auto;
     max-width: none;
-    /* resting state: tiny, invisible, stacked behind the fish body */
     transform: translate(-50%, -50%) scale(0.12);
     opacity: 0;
-    /* no white photo frame -- the image fills the whole tile edge to edge */
     display: block;
     object-fit: cover;
     box-shadow: 0 0.9vw 2.4vw rgba(18, 26, 74, 0.30);
@@ -174,23 +129,17 @@
     opacity: 1;
 }
 
-/* Sardine2 / Sardine3 are wrapper divs: the fish fills it, the "written on"
-   text is an overlay pinned to the fish body. Both scale/move with the wrapper. */
 .sardine1Fish, .sardine2Fish, .sardine3Fish{
     display: block;
     width: 100%;
     height: auto;
     max-width: none;
-    pointer-events: auto;      /* opt back in (wrapper is none) so hovering the
-                                  whole fish drives the reflection + toggles */
+    pointer-events: auto;  
     cursor: pointer;
 }
-/* Each fish + its written-on text share a .sardineNInner wrapper, so the hover
-   pop (scale / lift / tilt) carries the text along with the fish instead of
-   leaving it behind. */
 .sardine1Inner, .sardine2Inner, .sardine3Inner{
     position: relative;
-    z-index: 1;               /* fish + text sit in front of the preview photos */
+    z-index: 1;       
     width: 100%;
     transition: transform 0.45s ease-in-out;
     will-change: transform;
@@ -202,36 +151,27 @@
 }
 .sardine1Fish, .sardine2Fish, .sardine3Fish{
     position: relative;
-    z-index: 1;               /* above the photos' resting (invisible) stack */
+    z-index: 1;      
 }
 .sardine1Text, .sardine2Text, .sardine3Text{
     position: absolute;
-    top: 30%;                  /* sits along the fish body -- tweak to taste */
+    top: 30%;                
     left: 28%;
     width: 50%;
     height: auto;
     max-width: none;
-    z-index: 2;                /* glassy text stays on top of the fish (z-index 1) */
+    z-index: 2;                
     pointer-events: none;
-    overflow: visible;         /* let the specular shine / glow spill past the viewBox */
-}
-.sardine2Text{
-    /* top: 48%; */
+    overflow: visible;        
 }
 .sardine1Text{
     left: 29%;
     width: 55%;
 }
-/* Liquid-glass letters: translucent cool-white body so the bevel highlight /
-   shadow ring from the #s3glass filter reads as wet glass. `color` feeds the
-   glyphs' fill="currentColor". */
 .glassLetter{
     color: rgba(214, 228, 255, 0.22);
 }
 
-/* Cursor-tracked wet reflection. Hidden until hover; `screen` blend makes the
-   light add on top of the glass instead of painting flat. The eased fade
-   (ease-in-out) plus the JS position lerp keep it from flickering. */
 .cursorGlow{
     opacity: 0;
     transition: opacity 0.4s ease-in-out;
@@ -241,35 +181,16 @@
 }
 
 .lid{
-    z-index: 3;                 /* above the fish (2), below the key bar (4) */
+    z-index: 3;            
     cursor: pointer;
     clip-path: inset(0 0 0 0);
     will-change: clip-path;
-    transform: translateZ(0);  /* force a permanent layer so the clip-path
-                                  transition is "warm" on open AND close, every
-                                  time -- no first-run slow start to compensate
-                                  for. (handleClick only touches clipPath.) */
-    /* Must be byte-for-byte identical to .roll's transition below so the lid
-       and key move in lockstep in both directions. */
+    transform: translateZ(0); 
     transition: clip-path 0.6s ease-in-out;
 }
 .roll{
     z-index: 4;
-    left: 35%;                 /* key bar lines up with the lid's closed right edge */
-    pointer-events: none;      /* never steal the click from the lid */
-    transition: transform 0.6s ease-in-out;   /* identical curve/duration to .lid, no delay */
+    left: 35%;                 
+    pointer-events: none;      
+    transition: transform 0.6s ease-in-out;  
 }
-
-/* .lid:active {
-    clip-path: inset(0 50% 0 0);
-} */
-
-
-/* @keyframes openSardine {
-    0% {
-        clip-path: inset(0 0 0 0);
-    }
-    100% {
-        clip-path: inset(0 80% 0 0);
-    }
-} */

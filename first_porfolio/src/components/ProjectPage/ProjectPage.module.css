@@ -1,6 +1,5 @@
 @import '../../vars.css';
 
-/* --accent is set per project via inline style on .backdrop */
 .backdrop{
     position: fixed;
     inset: 0;
@@ -9,7 +8,6 @@
     overflow-x: hidden;
     scrollbar-width: none;
     background: var(--color-background, #faf9f6);
-    /* color: var(--maroon, #852736); */
     color: var(--accent);
     font-family: var(--font-thin, 'Raleway', Helvetica, sans-serif);
     animation: pageIn 0.35s ease;
@@ -23,14 +21,12 @@
 .inner{
     max-width: 1100px;
     margin: 0 auto;
-    padding: 6rem 1.5vw 14vh;   /* top pad clears the fixed .header */
+    padding: 6rem 1.5vw 14vh;
     display: flex;
     flex-direction: column;
     gap: 1.6rem;
 }
 
-/* Top bar: the four projects as a plain text list, no toast thumbnails.
-   Click one to jump to that page; the current one is highlighted. */
 .header{
     position: fixed;
     top: 0;
@@ -40,7 +36,7 @@
     display: flex;
     align-items: baseline;
     gap: 2.4rem;
-    padding: 1.4rem 7rem 1.4rem 3vw;   /* left aligns with .inner; right pad keeps clear of .close */
+    padding: 1.4rem 7rem 1.4rem 3vw;  
     background: var(--color-background, #faf9f6);
     border-bottom: 2px solid rgba(133, 39, 54, 0.12);
     overflow-x: auto;
@@ -59,8 +55,6 @@
     cursor: pointer;
     font-family: var(--font-thin, 'Raleway', Helvetica, sans-serif);
     font-size: 1rem;
-    /* color: var(--maroon); */
-    /* background-color: var(--maroon); */
     border: var(--accent) 3px solid;
     border-radius: 20px;
     padding: 5px;
@@ -69,7 +63,6 @@
 }
 .headerItem:hover{ opacity: 0.75; }
 .headerNum{
-    /* font-family: 'Geist Mono', 'Courier New', ui-monospace, monospace; */
     font-size: 0.8rem;
     font-family: var(--font-thin), Helvetica;
     letter-spacing: 0.1em;
@@ -84,9 +77,6 @@
     color: var(--beige);
 }
 .headerActive .headerName{
-    /* text-decoration: underline; */
-    /* text-underline-offset: 4px;
-    text-decoration-color: var(--accent); */
     color: var(--accent0);
 }
 
@@ -99,17 +89,16 @@
     height: 3rem;
     display: grid;
     place-items: center;
-    place-content: center;   /* centre the single cell in the circle, not just its contents */
+    place-content: center;   
     border-radius: 50%;
     border: 2px solid currentColor;
     background: transparent;
     color: var(--accent);
-    font-size: 0;   /* hide the ✕ glyph; the X below is drawn dead-centre instead */
+    font-size: 0;  
     line-height: 1;
     cursor: pointer;
     transition: transform 0.25s ease, background 0.2s ease, border-color 0.2s ease;
 }
-/* Two bars stacked in the same grid cell -> a perfectly centred X. */
 .close::before,
 .close::after{
     content: '';
@@ -125,7 +114,7 @@
     transform: rotate(90deg) scale(1.06);
     background: var(--accent);
     color: var(--beige);
-    border-color: transparent;   /* border vanishes on hover */
+    border-color: transparent; 
 }
 
 .eyebrow{
@@ -145,9 +134,6 @@
     color: var(--accent);
 }
 
-/* "Book Tracker" is still just plans on paper -- fills the empty spot where
-   the main image would normally sit, with a small, honest progress readout
-   instead of pretending it's further along. */
 .progress{
     width: 100%;
     aspect-ratio: 4 / 3;
@@ -182,7 +168,6 @@
 }
 .tagline{
     margin: 0;
-    /* font-size: clamp(1rem, 2.4vw, 1.35rem); */
     font-size: 3.5vh;
     opacity: 0.7;
     color: var(--accent);
@@ -191,7 +176,6 @@
     font-family: var(--font-thin), Helvetica;
 }
 
-/* Two columns: all the text on the left, an image placeholder on the right. */
 .content{
     display: grid;
     grid-template-columns: 1.05fr 0.95fr;
@@ -228,14 +212,11 @@
     object-fit: contain;
     border-radius: 1rem;
     padding-top: 5vh;
-    /* background: color-mix(in srgb, var(--accent) 10%, transparent); */
 }
 .mainImageLarge{
     width: 118%;
     margin-left: -9%;
 }
-/* 2D Game page: larger main image, no letterboxing so the rounded corners
-   actually clip the artwork. */
 .mainImageGame{
     width: 128%;
     margin-left: -14%;
@@ -259,13 +240,10 @@
 .body{
     margin: 0;
     max-width: 46ch;
-    /* font-size: clamp(1.05rem, 2.6vw, 1.45rem); */
     font-size: 3vh;
     line-height: 1.65;
 }
 
-/* Shared small uppercase label used above the .why / .how headings,
-   echoing .eyebrow above the page title. */
 .sectionEyebrow{
     margin: 0 0 0.4rem;
     font-family: 'Geist Mono', 'Courier New', ui-monospace, monospace;
@@ -284,7 +262,6 @@
     gap: 3.5rem;
     margin-top: 2.5rem;
     padding-top: 2.5rem;
-    /* border-top: 2px solid rgba(133, 39, 54, 0.12); */
 }
 .ticket{
     position: relative;
@@ -416,7 +393,6 @@
     line-height: 1.6;
     max-width: 56ch;
 }
-/* Backstory column shrinks to leave room for Andie beside it. */
 .whyNarrow p{
     max-width: 40ch;
 }
@@ -426,7 +402,7 @@
     width: 24%;
     max-width: 240px;
     height: auto;
-    margin-top: -3.5rem;   /* lift her up to cover the empty gap beside the text */
+    margin-top: -3.5rem; 
 }
 
 .main{
@@ -435,17 +411,13 @@
     flex-direction: row;
     align-items: flex-start;
     gap: 3.5rem;
-    /* margin-top: 1rem; */
     padding-top: 2.5rem;
-    /* border-top: 2px solid rgba(133, 39, 54, 0.12); */
 }
 .how{
     width: 46%;
     flex: 0 0 46%;
     min-width: 0;
 }
-/* 2D Game page: stretch the left column to the gallery's height and pin the
-   gameplay clip to its bottom, so it lands beside the workplace picture. */
 .howGame{
     display: flex;
     flex-direction: column;
@@ -453,7 +425,7 @@
 }
 .howVideo{
     width: 118%;
-    margin-left: -18%;   /* grow leftward into the gutter, clear of the gallery */
+    margin-left: -18%;   
     margin-top: auto;
     display: block;
 }
@@ -515,9 +487,6 @@
     to{ transform: translateX(-50%); }
 }
 
-/* Full-bleed strip of the hand-drawn game components, sliding right to left
-   forever. Each piece is a button: clicking it opens the shared lightbox so
-   it rises off the strip and scales up for a closer look. */
 .gameStripWrap{
     position: relative;
     left: 50%;
@@ -537,10 +506,10 @@
     animation: gameScroll 90s linear infinite;
 }
 .gameTrack:hover{
-    animation-play-state: paused;   /* hold still so a moving piece is easy to click */
+    animation-play-state: paused;  
 }
 .gameTrackReverse{
-    animation-direction: reverse;   /* travels the opposite way (left to right) */
+    animation-direction: reverse;  
 }
 .gameItem{
     flex: 0 0 auto;
@@ -558,18 +527,16 @@
     height: 12rem;
     width: auto;
     display: block;
-    pointer-events: none;   /* clicks land on the button, not the img */
+    pointer-events: none;
 }
 .gameImageSmall{
-    height: 8.5rem;   /* 11-trinket2 reads oversized next to the rest */
+    height: 8.5rem; 
 }
 @keyframes gameScroll{
     from{ transform: translateX(0); }
     to{ transform: translateX(-50%); }
 }
 
-/* Two booking-flow clips, side by side, always playing. Spans the full
-   content width so the pair lines up with the page's left/right margins. */
 .bookingVideos{
     display: flex;
     flex-direction: row;
@@ -594,7 +561,6 @@
     gap: 3rem;
     margin-top: 1rem;
     padding-top: 2.5rem;
-    /* border-top: 2px solid rgba(133, 39, 54, 0.12); */
 }
 .resultsText{
     flex: 1 1 auto;
@@ -691,8 +657,6 @@
     cursor: zoom-out;
     animation: pageIn 0.2s ease both;
 }
-/* Capped well under the viewport so the whole image is always visible at
-   once -- no scrolling needed to see the full picture up close. */
 .lightboxImage{
     max-width: 60%;
     max-height: 60vh;
@@ -703,8 +667,6 @@
     box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.5);
     animation: lightboxRise 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
 }
-/* The game components are transparent SVGs, so a box-shadow just paints a grey
-   rectangle behind them. Drop it for those. */
 .lightboxImagePlain{
     box-shadow: none;
 }
@@ -713,7 +675,6 @@
     to  { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* Prev / next controls for stepping through the game-component lightbox. */
 .lightboxArrow{
     position: fixed;
     top: 50%;
@@ -794,7 +755,7 @@
     }
     .right{
         position: static;
-        order: -1;              /* placeholder on top when stacked */
+        order: -1;       
     }
     .imagePlaceholder, .mainImage{ aspect-ratio: 16 / 9; }
 

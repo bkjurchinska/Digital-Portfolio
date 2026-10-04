@@ -15,7 +15,6 @@ import purpleRect from '../../assets/purple-rectangle.svg';
 
 gsap.registerPlugin(ScrambleTextPlugin);
 
-// Same order as the carousel's `images` array: egg, avocado, banana, blueberry.
 const navIcons = [
     { src: smallEgg, className: styles.smallEgg },
     { src: smallAvocado, className: styles.smallAvocado },
@@ -23,8 +22,6 @@ const navIcons = [
     { src: smallBlueberry, className: styles.smallBlueberry },
 ];
 
-// Text that scrambles in beside the plate on toast hover.
-// One entry per toast -- edit these freely.
 const INGREDIENTS = [
     "Figma • UX Research",
     "HTML • CSS • JavaScript • React • Python",
@@ -39,10 +36,8 @@ const DESCRIPTIONS = [
     "Work in progress",
 ];
 
-// One entry per toast -- the carousel arrows recolour to match whichever
-// project is currently on the plate.
 const ARROW_COLORS = ["#FFE2A4", "#F4F7A9", "#F7C445", "#DAC4D5"];
-// Same idea, for the small line inside each arrow.
+
 const ARROW_LINE_COLORS = ["#E79300", "#859B04", "#592300", "#364874"];
 
 export const Projects = ({ onOpenProject, activeToast, onActiveToastChange }) => {
@@ -79,9 +74,6 @@ export const Projects = ({ onOpenProject, activeToast, onActiveToastChange }) =>
             oldCroods.current.y = e.clientY;
         };
 
-        // How far the jerk is allowed to drift from the fork/knife's own resting
-        // spot (px) -- without this the inertia landing spot just keeps
-        // compounding hover after hover, eventually pushing it off-screen.
         const JERK_BOUNDS = 18;
         const clampToBounds = (value) => gsap.utils.clamp(-JERK_BOUNDS, JERK_BOUNDS, value);
 
@@ -139,8 +131,6 @@ export const Projects = ({ onOpenProject, activeToast, onActiveToastChange }) =>
 
     }, []);
 
-    // Scramble the side text in whenever a toast is hovered (or the toast
-    // changes while hovering). Leaving just fades it out via CSS.
     useEffect(() => {
         if (!toastHovered) return;
         const ingredients = ingredientsRef.current;
@@ -163,8 +153,6 @@ export const Projects = ({ onOpenProject, activeToast, onActiveToastChange }) =>
     }, [toastHovered, activeToast]);
 
     return <section className={styles.container} ref={rootRef}>
-        {/* <div className={styles.purple_rect}>
-        </div> */}
         <img src={purpleRect} className={styles.purple_rect}></img>
         <h1 id='projects' className={styles.title}>Projects</h1>
         <div className={styles.plateDiv}>
@@ -234,6 +222,5 @@ export const Projects = ({ onOpenProject, activeToast, onActiveToastChange }) =>
                 </svg>
             </button>
         </div>
-        {/* <p className={styles.test}>test</p> */}
     </section>
 };

@@ -1,7 +1,5 @@
 @import '../../vars.css';
 
-/* Full-screen Gallery, opened by the printed ticket. Very dark red ground
-   with warm cream ink -- an inverse of the site's usual cream/maroon pairing. */
 .backdrop{
     position: fixed;
     inset: 0;
@@ -24,11 +22,8 @@
     to  { opacity: 1; transform: translateY(0); }
 }
 
-/* No max-width/centering here -- the 6vw left padding must land at the same
-   viewport-relative spot as .rail's own left padding, so the title lines up
-   with the first photo instead of being inset further by a centered cap. */
 .inner{
-    padding: 6rem 4vw 2rem 6vw;      /* bottom pad = the gap above the picture row */
+    padding: 6rem 4vw 2rem 6vw;     
     display: flex;
     flex-direction: column;
     gap: 2.6rem;
@@ -95,7 +90,6 @@
 }
 
 
-/* coffee + cinnamon on the left, a folded newspaper to their right */
 .tableRow{
     display: flex;
     align-items: flex-start;
@@ -103,59 +97,7 @@
     flex-wrap: wrap;
 }
 
-/* Newspaper lying on the table, tilted. Click it to read it up close. */
-.newspaper{
-    position: relative;
-    flex: 0 0 auto;
-    /* width: clamp(190px, 24vw, 320px); */
-    width: 50%;
-    /* bottom: 15%; */
-    margin-top: -10%;    
-    /* margin-top: 2rem; */
-    left: 25%;
-    background: var(red);
-}
-.newspaperBtn{
-    display: block;
-    width: 100%;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    cursor: zoom-in;
-    transform: rotate(-6deg);
-    transition: transform 0.25s ease, filter 0.25s ease;
-    filter: drop-shadow(0 14px 22px rgba(60, 35, 20, 0.28));
-}
-.newspaperBtn:hover{
-    transform: rotate(-4deg) scale(1.03);
-    filter: drop-shadow(0 20px 32px rgba(60, 35, 20, 0.34));
-}
-.newspaperImg{
-    display: block;
-    width: 100%;
-    height: auto;
-}
-/* the scrambling caption, running along the left-hand side of the paper */
-.newspaperCaption{
-    position: absolute;
-    top: 50%;
-    left: -1.5rem;
-    transform: translateY(-50%) rotate(-6deg);
-    writing-mode: vertical-rl;
-    font-family: 'Geist Mono', 'Courier New', ui-monospace, monospace;
-    font-size: clamp(0.62rem, 1.4vw, 0.8rem);
-    letter-spacing: 0.16em;
-    text-transform: lowercase;
-    color: var(--ink-dim);
-    white-space: nowrap;
-    pointer-events: none;
-}
 
-/* Full-viewport-width horizontal picture row. .railTrack is a tall spacer whose
-   height (set from JS) = one viewport + the row's overflow, so scrolling through
-   it maps 1:1 to the sideways pan. .railStage is position:sticky, so the
-   compositor holds it still (smooth, no JS transform-pin) while that scroll
-   happens; JS eases .rail's x across it. Sits below the coffee + cinnamon. */
 .railTrack{
     position: relative;
     width: 100vw;
@@ -168,27 +110,27 @@
     height: 100vh;
     display: flex;
     align-items: center;
-    overflow: hidden;            /* clip the row to the viewport width */
+    overflow: hidden;   
 }
 .railViewport{
     width: 100%;
 }
 .rail{
     display: flex;
-    gap: 240px;     /* the frame overlay renders larger than its tile (see .tileFrame), so this has to clear that overhang on both sides */
+    gap: 240px;    
     width: max-content;
-    padding: 10px 0 10px 6vw;     /* vertical room for the tile hover lift, left gap before the first photo */
+    padding: 10px 0 10px 6vw;    
     will-change: transform;
 }
 .tile{
     position: relative;
     flex: 0 0 auto;
-    height: clamp(360px, 74vh, 760px);   /* big -- sized by height, width follows the image's own aspect ratio */
+    height: clamp(360px, 74vh, 760px);  
     width: auto;
     padding: 0;
     border: none;
     background: rgba(133, 39, 54, 0.06);
-    overflow: visible;    /* the frame overlay is allowed to sit past the photo's own edges */
+    overflow: visible;    
     cursor: zoom-in;
     display: block;
     border-radius: 4px;
@@ -199,18 +141,12 @@
     box-shadow: 0 1rem 2.4rem rgba(133, 39, 54, 0.18);
     z-index: 1;
 }
-/* Width follows the tile's fixed height at each image's own aspect ratio.
-   Anchored to the top at just under full height, so a sliver is trimmed off
-   the bottom instead of the photo poking out past the frame's window. */
 .tileImage{
     width: auto;
     height: calc(89% - 16px);
     object-fit: contain;
     display: block;
 }
-/* The ornate frame sits on top of the photo as its own decorative layer,
-   scaled uniformly (never stretched/skewed) to fit within the tile -- so it
-   keeps its own native proportions, just smaller when the tile is smaller. */
 .tileFrame{
     position: absolute;
     inset: 0;
@@ -252,8 +188,6 @@
 }
 .tilePlaceholder:hover{ transform: none; box-shadow: none; }
 
-/* "Go back" -- sits right after the scroll-jacked rail, so it only scrolls
-   into view once the visitor has panned all the way through the pictures. */
 .outro{
     display: flex;
     flex-direction: column;
@@ -321,15 +255,12 @@
     .rail{ gap: 150px; }
 }
 
-/* No scroll pan when the viewer prefers reduced motion -- the row just becomes
-   a normal, hand-scrollable horizontal strip. */
 @media (prefers-reduced-motion: reduce){
     .railTrack{ height: auto !important; margin-bottom: 4vh; }
     .railStage{ position: static; height: auto; overflow-x: auto; scrollbar-width: none; }
     .railStage::-webkit-scrollbar{ display: none; }
 }
 
-/* Lightbox */
 .lightbox{
     position: fixed;
     inset: 0;
@@ -381,42 +312,4 @@
     .lightboxNext{ right: 1vw; }
 }
 
-/* Newspaper reader -- the paper shown large and scrollable so it's readable. */
-.reader{
-    position: fixed;
-    inset: 0;
-    z-index: 5200;
-    display: flex;
-    overflow: auto;
-    padding: 5vh 4vw;
-    background: rgba(24, 12, 14, 0.92);
-    cursor: zoom-out;
-    animation: galleryIn 0.22s ease both;
-}
-.readerPaper{
-    width: min(1050px, 94vw);
-    height: auto;
-    margin: auto;
-    border-radius: 2px;
-    box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.6);
-    cursor: default;
-}
-.readerClose{
-    position: fixed;
-    top: 2.2vh;
-    right: 2.6vw;
-    z-index: 5201;
-    width: 3rem;
-    height: 3rem;
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.75);
-    background: rgba(0, 0, 0, 0.35);
-    color: #fff;
-    font-size: 1.1rem;
-    line-height: 1;
-    cursor: pointer;
-    transition: background 0.2s ease, transform 0.2s ease;
-}
-.readerClose:hover{ background: rgba(0, 0, 0, 0.6); transform: rotate(90deg); }
+

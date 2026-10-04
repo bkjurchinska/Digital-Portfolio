@@ -1,21 +1,12 @@
 import { useEffect, useId, useRef } from 'react';
 import styles from './SardineText.module.css';
 
-// The three "written on glass" letterform SVGs from the sardines in the Design
-// section, pulled out so the Design pages can reuse them as their titles.
-// `which` is 0 | 1 | 2 (sardine 1 / 2 / 3). Hover it for the cursor-tracked
-// wet-glass sheen -- same effect as on the fish.
-
-// viewBox size per glyph set; the point light starts dead-centre.
 const GLYPHS = [
     { w: 1337, h: 254 },
     { w: 1044, h: 225 },
     { w: 1062, h: 208 },
 ];
 
-// Cursor-tracked "wet glass" light (copied from the sardine section). The
-// <fePointLight> eases toward the pointer every frame; the glow layer fades in
-// on hover. Handlers go on the SVG itself here.
 function useGlassLight(vbW, vbH) {
     const pointLightRef = useRef(null);
     const glowRef = useRef(null);
@@ -54,8 +45,6 @@ function useGlassLight(vbW, vbH) {
     return { pointLightRef, glowRef, onEnter, onMove, onLeave };
 }
 
-// The letterform paths for each sardine. Kept as plain render functions so the
-// group can be <use>d twice (static glass + cursor glow) from one definition.
 const glyphChildren = [
     (
         <>
@@ -104,8 +93,6 @@ export const SardineText = ({ which = 0, className = '' }) => {
     const g = GLYPHS[which] || GLYPHS[0];
     const glass = useGlassLight(g.w, g.h);
 
-    // Unique ids per instance so two SardineTexts (or the sardine section itself)
-    // never collide on filter / gradient ids.
     const raw = `st${useId().replace(/[^a-zA-Z0-9]/g, '')}`;
     const fillId = `${raw}-fill`;
     const glossyId = `${raw}-glossy`;
@@ -162,9 +149,7 @@ export const SardineText = ({ which = 0, className = '' }) => {
                 </g>
             </defs>
 
-            {/* static glass */}
             <use href={`#${glyphsId}`} filter={`url(#${glossyId})`} />
-            {/* cursor-tracked light, fades in on hover */}
             <use href={`#${glyphsId}`} ref={glass.glowRef} className={styles.cursorGlow} filter={`url(#${lightId})`} />
         </svg>
     );

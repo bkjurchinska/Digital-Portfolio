@@ -6,38 +6,19 @@
     margin-top: 5%;
     width: 100%;
     transform: scale(0.75);
-    scroll-margin-top: 3vh;   /* don't jam against the top on the #about jump */
-    /* Query container so the text below can size itself in `cqw` -- a % of
-       THIS box's own width -- instead of vh/flat px. vh/px text doesn't
-       track the board's own width at all, so on a narrower window the
-       board (and everything %-based) shrinks while the text stays the
-       same size, overflowing it -- this is what ties them back together. */
+    scroll-margin-top: 3vh;   
     container-type: inline-size;
-    /* Local override: --font-size is a :root default (only used here),
-       scaled down and tied to this container's width instead of vh. */
     --font-size: 2.6cqw;
 }
 .container i{
     font-family: var(--font-thin), Helvetica;
 }
 .squigleViewport{
-    /* NB: deliberately NOT renamed to match the JSX's `squiggleViewport`
-       (this selector is one letter short, "squigle"). Fixing that typo
-       makes this rule actually apply -- but doing so also switches on its
-       overflow:hidden, which clips off the vertical wave curves (the
-       shape's short straight-edged middle is all that's left visible) and
-       needs the svg's own top/left offsets to be recalibrated against a
-       different containing block. Not worth the churn: the pan-distance
-       fix in About.jsx (amount() halved) already keeps the strip's real
-       edges hundreds of px outside the viewport on their own, so nothing
-       actually depends on this clip -- leaving the mismatch alone keeps
-       the original (correct-looking) organic silhouette intact. */
     position: relative;
     width: 100%;
     height: auto;
     overflow: hidden;
     z-index: -1;
-    /* background-color: yellow; */
 }
 .squigly_backgr{
     position:absolute;
@@ -65,46 +46,8 @@
 .boardContainer{
     position: absolute;
     width: 100%;
-    /* cqw, not 80vh -- vh tracks the VIEWPORT'S height, not this section's
-       own width. .charcBoard{top:-10%} reads as a % of THIS box's height,
-       so as long as this box's height stayed viewport-height-based while
-       the board itself (width:80%, height:auto) shrank with the window's
-       WIDTH, that top offset stopped shrinking in step with the board --
-       a roughly constant pixel shift that became a bigger and bigger
-       fraction of the board the narrower the window got, so the board no
-       longer covered the content sized off it. 61.39cqw reproduces the
-       exact current pixel height (582px at today's 948px width), just
-       tied to width like everything else from now on. */
     min-height: 61.39cqw;
-    /* z-index: 0; */
 }
-/* .squigly_backgr path{
-    animation: squiggleAnimation 10s linear infinite;
-} */
-
-/* @keyframes squiggleAnimation {
-    0% { d: path("M2.49967 99.5188C2.49967 99.5188 206.5 -90.2602 495.337 99.5188C495.337 99.5188 710.5 259.939 989.673 99.5188C989.673 99.5188 1228.5 -121.025 1513.5 99.5188V1952.04C1513.5 1952.04 1290.5 2097.08 988.674 1952.04C988.674 1952.04 742.5 1834.04 496.336 1952.04C496.336 1952.04 218 2087.85 1.5 1952.04L2.49967 99.5188Z"); }
-    15% { d: path("M236.283 4.63871C144.504 7.04061 4.50781 43.63 4.50781 43.63L8.54747 1892.72C8.54747 1892.72 150.626 1930.49 243.857 1933.21C356.169 1936.48 528.653 1892.72 528.653 1892.72C528.653 1892.72 669.191 1870.89 759.924 1870.72C852.423 1870.55 995.738 1892.72 995.738 1892.72C995.738 1892.72 1178.16 1937.51 1296.69 1933.21C1390.1 1929.82 1532.51 1892.72 1532.51 1892.72V43.63C1532.51 43.63 1374.55 4.52132 1271.44 4.63871C1169.12 4.7552 1012.4 43.63 1012.4 43.63C1012.4 43.63 859.104 88.1399 758.409 87.6202C660.625 87.1156 511.99 43.63 511.99 43.63C511.99 43.63 345.008 1.79332 236.283 4.63871Z"); }
-    35% { d: path("M237.8 4.5H4.50977L8.54942 1854.5H245.879H528.655H759.421H995.74H1304.77H1532.51V4.5H1269.93H1012.4H758.411H511.992H237.8Z"); }
-    40% { d: path("M4.51562 84.0444C4.51562 84.0444 141.444 149.767 235.786 154.078C347.012 159.161 511.997 84.0444 511.997 84.0444C511.997 84.0444 657.525 5.27256 758.921 4.50572C862.759 3.72042 1012.41 84.0444 1012.41 84.0444C1012.41 84.0444 1170.37 155.122 1277.51 154.078C1380.85 153.072 1532.52 84.0444 1532.52 84.0444V1934.44C1532.52 1934.44 1378.29 1879.67 1275.49 1877.92C1164.01 1876.01 995.746 1934.44 995.746 1934.44C995.746 1934.44 851.361 1993.99 754.377 1992.47C663.321 1991.04 528.661 1934.44 528.661 1934.44C528.661 1934.44 359.096 1874 246.895 1877.92C151.247 1881.25 8.55528 1934.44 8.55528 1934.44L4.51562 84.0444Z"); }
-    50% { d: path("M4.52344 148.067C4.52344 148.067 144.486 277.197 247.408 281.095C359.93 285.356 512.005 148.067 512.005 148.067C512.005 148.067 656.769 1.85133 769.533 4.53654C877.231 7.1011 1012.42 148.067 1012.42 148.067C1012.42 148.067 1167.93 283.727 1281.05 281.095C1387.99 278.607 1532.52 148.067 1532.52 148.067V1997.96C1532.52 1997.96 1389.21 1878.43 1277.02 1877.93C1163.53 1877.42 995.754 1997.96 995.754 1997.96C995.754 1997.96 862.644 2129.22 760.444 2127.48C662.008 2125.81 528.669 1997.96 528.669 1997.96C528.669 1997.96 373.65 1874.7 260.032 1877.93C154.068 1880.95 8.56309 1997.96 8.56309 1997.96L4.52344 148.067Z"); }
-    65% { d: path("M4.51562 84.0444C4.51562 84.0444 141.444 149.767 235.786 154.078C347.012 159.161 511.997 84.0444 511.997 84.0444C511.997 84.0444 657.525 5.27256 758.921 4.50572C862.759 3.72042 1012.41 84.0444 1012.41 84.0444C1012.41 84.0444 1170.37 155.122 1277.51 154.078C1380.85 153.072 1532.52 84.0444 1532.52 84.0444V1934.44C1532.52 1934.44 1378.29 1879.67 1275.49 1877.92C1164.01 1876.01 995.746 1934.44 995.746 1934.44C995.746 1934.44 851.361 1993.99 754.377 1992.47C663.321 1991.04 528.661 1934.44 528.661 1934.44C528.661 1934.44 359.096 1874 246.895 1877.92C151.247 1881.25 8.55528 1934.44 8.55528 1934.44L4.51562 84.0444Z"); }
-    75% { d: path("M237.8 4.5H4.50977L8.54942 1854.5H245.879H528.655H759.421H995.74H1304.77H1532.51V4.5H1269.93H1012.4H758.411H511.992H237.8Z"); }
-    85% { d: path("M236.283 4.63871C144.504 7.04061 4.50781 43.63 4.50781 43.63L8.54747 1892.72C8.54747 1892.72 150.626 1930.49 243.857 1933.21C356.169 1936.48 528.653 1892.72 528.653 1892.72C528.653 1892.72 669.191 1870.89 759.924 1870.72C852.423 1870.55 995.738 1892.72 995.738 1892.72C995.738 1892.72 1178.16 1937.51 1296.69 1933.21C1390.1 1929.82 1532.51 1892.72 1532.51 1892.72V43.63C1532.51 43.63 1374.55 4.52132 1271.44 4.63871C1169.12 4.7552 1012.4 43.63 1012.4 43.63C1012.4 43.63 859.104 88.1399 758.409 87.6202C660.625 87.1156 511.99 43.63 511.99 43.63C511.99 43.63 345.008 1.79332 236.283 4.63871Z"); }
-    100% { d: path("M2.49967 99.5188C2.49967 99.5188 206.5 -90.2602 495.337 99.5188C495.337 99.5188 710.5 259.939 989.673 99.5188C989.673 99.5188 1228.5 -121.025 1513.5 99.5188V1952.04C1513.5 1952.04 1290.5 2097.08 988.674 1952.04C988.674 1952.04 742.5 1834.04 496.336 1952.04C496.336 1952.04 218 2087.85 1.5 1952.04L2.49967 99.5188Z"); }
-} */
-/* @supports (animation-timeline: scroll()) {
-    .squigly_backgr path{
-        animation: squiggleAnimation 1 linear both;
-        animation-timeline: view();
-        animation-range: entry 0% cover 50%; 
-        animation-name: squiggleAnimation;
-        animation-duration: auto;
-        animation-timing-function: linear;
-        animation-fill-mode: both;
-        animation-timeline: scroll(root block);
-    }
-} */
 
 .title{
     position: absolute;
@@ -120,31 +63,17 @@
     text-orientation: sideways;
     transform: rotate(-180deg);
 }
-/* .title:hover:after{
-    transform: scaleX(1);
-    transform-origin: bottom left;
-} */
 .textContainer{
     position: relative;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     align-items: flex-start;
-    /* gap: 2rem; */
     width: 100%;
     max-width: 100%;
     height: 100%;
-    /* cqw, not a flat 100px -- a fixed pixel offset doesn't shrink as the
-       window narrows, so as the board (width-based, %/cqw) shrunk around
-       it, this constant gap became a bigger and bigger fraction of the
-       shrinking board, pushing .experience's tomatoes/olives/crackers
-       further down the board the smaller the window got. 10.55cqw
-       reproduces the exact same 100px at today's width (948px), now tied
-       to that width instead of being fixed. */
     top: 10.55cqw;
     z-index: 3;
-    /* background-color: yellow; */
-    /* opacity: 50%; */
 }
 
 .intro{
@@ -154,11 +83,8 @@
     justify-content: left;
     color: var(--color-primary);
     font-size: 6cqw;
-    /* top: 2%; */
-    /* bottom: 10%; */
     margin-left: 3%;
     top: 5%;
-    /* background-color: lightcyan; */
 }
 
 .description{
@@ -171,10 +97,6 @@
     justify-content: center;
     align-items: left;
     margin-top: 1%;
-    /* margin: 5%; */
-    /* margin-left: 5%; */
-    /* font-size: 2.5vw; */
-    /* background-color: blueviolet; */
 }
 
 .descriptionText{
@@ -200,9 +122,6 @@
 .arrowInfo{
     position: relative;
     width: 100%;
-    /* display: flex;
-    flex-direction: row; */
-    /* background-color: lightblue; */
 }
 
 
@@ -211,19 +130,11 @@
     position: relative;
     display: flex;
     width: 40%;
-    /* cqw, not a huge flat 170vh -- the decorations below (tomato vine,
-       crackers, slices) are position:absolute with top:% offsets measured
-       against THIS box's height, so a height tied to the board's own
-       reference width is what keeps them landing inside the (now
-       original-sized) board instead of spread down past its bottom edge. */
-    /* min-height: 55cqw; */
     aspect-ratio: 1/2;
     flex-direction: column;
     margin-top: 5%;
-    /* margin-left: -10%; */
     left: -2%;
     font-size: var(--font-size);
-    /* font-size: 3.9vh; */
     color: var(--beige);
     font-family: var(--font-thin), Helvetica;
 }
@@ -232,15 +143,12 @@
 }
 .corp{
     position: absolute;
-    /* background-color: red; */
     width: 60%;
     left: 17%;
     margin-top: 10%;
 }
 .evn{
     position: absolute;
-    /* margin-top: 10%; */
-    /* margin-left: 8%; */
     top: 24%;
     color: var(--color-primary);
     font-size: 2.6cqw;
@@ -282,12 +190,6 @@
     width: 100%;
     transform: rotate(-110deg);
     bottom: 1%;
-    /* Can't actually push this further down without it hanging off the
-       board's bottom edge -- at its original size, this is the lowest spot
-       that still stays on the board (see the matching note on .tomato1). */
-    /* top: -75%; */
-    /* right: 30%; */
-    /* z-index: 5; */
 }
 .tomato1, .tomato2, .tomato3, .tomato4, .tomato5, .tomato6{
     position: absolute;
@@ -299,41 +201,27 @@
     touch-action: none;
     z-index: 5;
     transition: linear;
-    /* background-color: aqua; */
 }
-/* Positions recomputed (not eyeballed) from .tomatoStem's own CURRENT
-   rendered box (offsetLeft/Top/Width/Height): read each branch tip's
-   fractional (x,y) off the raw tomato-stem.png (unrotated), then ran the
-   same rotate(-110deg) matrix the CSS applies, around the stem's own
-   center, to land each tomato's center exactly on its tip -- verified
-   live against the stem's actual bounding box. Recalculated after
-   .tomatoStem's own offset changed (bottom:1% instead of top/right). */
 .tomato1{
     left: 55.6%;
     top: 25.61%;
-    /* background-color: darkgoldenrod; */
 }
 .tomato2{
     left: 13.12%;
     top: -3%;
-    /* background-color: ghostwhite; */
 }
 .tomato3{
     left: 15.30%;
     top: 47%;
-    /* background-color: darkcyan; */
 }
 .tomato4{
     left: 52.67%;
     top: -20%;
     bottom: 120%;
-    /* background-color: darkcyan; */
 }
 .tomato5{
     left: 92.80%;
-    /* right: -5%; */
     top: 9%;
-    /* background-color: gold; */
 }
 .tomato6{
     left: -24%;
@@ -342,9 +230,7 @@
 .wholeTomato{
     position: absolute;
     width: 110.57%;
-    /* height: 80vh; */
     aspect-ratio: 1/0.96;
-    /* margin-left: -30%; */
     align-items: center;
     justify-content: center;
     inset: 0;
@@ -353,12 +239,6 @@
     transform-origin: center;
 }
 .vineBounds{
-    /* This is what Draggable's `bounds` prop (About.jsx) clamps every
-       tomato to -- if a tip sits outside this box, dragging (or GSAP's own
-       bounds correction on init) stops well short of it. Sized here to
-       comfortably contain .tomatoStem's own full rotated bounding box
-       (computed the same way as the tip positions above), not just the 6
-       tip points, so nothing on the vine is ever out of reach. */
     position: absolute;
     left: -60%;
     /* top: -15%; */
@@ -366,16 +246,12 @@
     width: 220%;
     height: 130%;
     pointer-events: none;
-    /* background-color: aqua; */
 }
 .cracker1{
     position: absolute;
     width: 38%;
     top: 60%;
     right: 114%;
-    /* left: 76%; */
-    /* top: -18%; */
-    /* left: 18%; */
     transform: rotate(100deg);
     cursor: pointer;
 }
@@ -403,7 +279,6 @@
 }
 .cracker2Spinning{
     animation-name: cracker2Spin;
-    /* animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1); */
     animation-fill-mode: forwards;
 }
 @keyframes cracker2Spin{
@@ -440,14 +315,10 @@
 .bachelors{
     display: flex;
     flex-direction: row;
-    /* No align-items here defaulted to stretch, which forced the round
-       olive image to stretch to match its taller paragraph sibling's
-       height, distorting it into an oval. */
     align-items: flex-start;
 }
 .bachelors p{
     font-size: 2.6cqw;
-    /* width: 70%; */
     margin-left: 5%;
     margin-top: 2%;
     color: var(--color-primary);
@@ -460,7 +331,6 @@
 }
 .people{
     position: absolute;
-    /* margin-top: 10%; */
     top: 36%;
     right: 15%;
 }
@@ -470,7 +340,6 @@
     right: 20%;
 }
 .rea{
-    /* margin-top: 10%; */
     top: 50%;
     /* right: 50%; */
     left: -15%;

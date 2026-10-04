@@ -3,20 +3,14 @@ import styles from './DesignPage.module.css';
 import { DESIGNS } from './designData';
 import { SardineText } from '../SardineText/SardineText';
 
-// How many empty tiles to show while a gallery has no images yet.
-const PLACEHOLDER_COUNT = 6;        // full-page gallery
-const SECTION_PLACEHOLDERS = 3;     // per sub-section gallery
+const PLACEHOLDER_COUNT = 6;        
+const SECTION_PLACEHOLDERS = 3;     
 
-// Full-screen "Design" page. `index` picks which of the three shows;
-// `onIndexChange` swaps to another (header tabs, the pager, or the left/right
-// arrow keys); `onClose` dismisses it (button or Escape).
 export const DesignPage = ({ index, onIndexChange, onClose }) => {
     const count = DESIGNS.length;
     const design = DESIGNS[index];
     const prev = DESIGNS[(index - 1 + count) % count];
     const next = DESIGNS[(index + 1) % count];
-    // Every image on the page, flattened -- drives the lightbox stepping whether
-    // the page is one gallery or a set of sub-sections.
     const images = useMemo(
         () => (design.sections
             ? design.sections.flatMap((s) => s.gallery || [])
@@ -27,12 +21,10 @@ export const DesignPage = ({ index, onIndexChange, onClose }) => {
     const [lightboxSrc, setLightboxSrc] = useState(null);
     const backdropRef = useRef(null);
 
-    // Open every page at the top, including when switching between them.
     useEffect(() => {
         backdropRef.current?.scrollTo(0, 0);
     }, [index]);
 
-    // Step through the gallery lightbox; wraps around.
     const stepLightbox = (dir) => {
         const i = images.indexOf(lightboxSrc);
         if (i === -1) return;
@@ -56,7 +48,7 @@ export const DesignPage = ({ index, onIndexChange, onClose }) => {
         };
         window.addEventListener('keydown', onKey);
         const bodyOverflow = document.body.style.overflow;
-        document.body.style.overflow = 'hidden';     // freeze the page behind
+        document.body.style.overflow = 'hidden';    
         return () => {
             window.removeEventListener('keydown', onKey);
             document.body.style.overflow = bodyOverflow;
@@ -105,13 +97,7 @@ export const DesignPage = ({ index, onIndexChange, onClose }) => {
                         {design.sections.map((sec, si) => {
                             const secImages = sec.gallery || [];
                             const feature = sec.galleryLayout === 'feature';
-                            // Sections without card/species data (e.g. Tote Bags) get a
-                            // plain title + description + gallery layout instead of the
-                            // Characters-style "character card" aside.
                             const hasCard = Boolean(sec.card || sec.species);
-                            // `variant`: 'featured' (a plain section's hero shot, shown large
-                            // and uncropped) or 'side' (the mockups stacked beside it,
-                            // cropped top/bottom via object-fit to fill their slot).
                             const renderTile = (src, i, variant) => (
                                 <button
                                     key={i}
@@ -217,7 +203,6 @@ export const DesignPage = ({ index, onIndexChange, onClose }) => {
                                                 </div>
                                             )}
 
-                                            {/* Top half: the star bullet points. */}
                                             <div className={styles.cardTop}>
                                                 {bulletRows.map((row, ri) => (
                                                     <ul key={ri} className={styles.cardPoints}>
@@ -228,8 +213,6 @@ export const DesignPage = ({ index, onIndexChange, onClose }) => {
                                                 ))}
                                             </div>
 
-                                            {/* Bottom half: accent-filled rectangle with the
-                                                description + strengths paragraph. */}
                                             <div className={styles.cardBottom}>
                                                 {sec.description && (
                                                     <p className={styles.cardIntro}>{sec.description}</p>
@@ -248,13 +231,11 @@ export const DesignPage = ({ index, onIndexChange, onClose }) => {
                                         <div className={`${styles.sectionGallery} ${feature ? styles.sectionGalleryFeature : ''}`}>
                                             {feature && secImages.length > 0 ? (
                                                 <>
-                                                    {/* left: Shield (idx 1) then Action pose (idx 2) */}
                                                     <div className={styles.featCol}>
                                                         {[1, 2].map((idx) =>
                                                             secImages[idx] ? renderTile(secImages[idx], idx) : null
                                                         )}
                                                     </div>
-                                                    {/* right: big full-body (idx 0) then headshots (idx 3) */}
                                                     <div className={styles.featCol}>
                                                         {[0, 3].map((idx) =>
                                                             secImages[idx] ? renderTile(secImages[idx], idx) : null

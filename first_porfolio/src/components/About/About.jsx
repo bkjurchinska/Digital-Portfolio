@@ -5,8 +5,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {Draggable} from "gsap/Draggable";
 import {InertiaPlugin} from "gsap/InertiaPlugin";
 import styles from "./About.module.css";
-// import selfPortrait from '../../assets/self_portrait.png';
-// import Arrow from '../../assets/arrow.png';
 import Cracker1 from '../../assets/biscuit1.png';
 import Cracker2 from '../../assets/biscuit2.png';
 import Olive1 from '../../assets/olive1.png';
@@ -21,7 +19,6 @@ import Tomato4 from '../../assets/tomato4.png';
 import Tomato5 from '../../assets/tomato5.png';
 import Tomato6 from '../../assets/tomato6.png';
 import CowCheese from '../../assets/cheese.png';
-// import Mozarella from '../../assets/mozzarella.png';
 import Board from '../../assets/charc-board.png';
 import SliceTop from '../../assets/slice-top.png';
 import SliceBottom from '../../assets/slice-bottom.png';
@@ -39,7 +36,7 @@ export const About = () => {
     const sliceBottomRef = useRef(null);
     const [sliceRemoved, setSliceRemoved] = useState(false);
 
-    const SNAP_RADIUS_RATIO = 0.75; // fraction of the tomato's own width it can be dragged before it stops snapping back
+    const SNAP_RADIUS_RATIO = 0.75; 
     const tomato1Ref = useRef(null);
     const tomato2Ref = useRef(null);
     const tomato3Ref = useRef(null);
@@ -54,7 +51,7 @@ export const About = () => {
     const arrow2Ref = useRef(null);
     const arrow3Ref = useRef(null);
 
-    const CRACKER2_REVEAL_DURATION = 1.6; // seconds - cracker spin duration
+    const CRACKER2_REVEAL_DURATION = 1.6; // seconds 
     const CRACKER2_AUTO_HIDE_DELAY = 15000; // ms
 
     const cracker2AutoHideRef = useRef(null);
@@ -78,7 +75,7 @@ export const About = () => {
         return () => clearTimeout(cracker2AutoHideRef.current);
     }, []);
 
-    const CRACKER1_REVEAL_DURATION = 1.6; // seconds - cracker spin duration
+    const CRACKER1_REVEAL_DURATION = 1.6; // seconds
     const CRACKER1_AUTO_HIDE_DELAY = 15000; // ms
 
     const cracker1AutoHideRef = useRef(null);
@@ -186,23 +183,12 @@ export const About = () => {
           })[0]
     );
 
-    // document.fonts.ready.then(initDraggables);
 
   return () => {
     draggables.forEach((d) => d.kill());
   };
 }, []);
 
-
-    // Pans the background squiggle sideways as the section scrolls by. This
-    // used to track raw `window.scrollY`, so the pan's budget (maxOffset)
-    // got spent by scrolling ANYWHERE on the whole page, not just while
-    // this section was in view -- on a long page that budget was often
-    // exhausted well before (or after) About was actually on screen, so by
-    // the time you got here the strip was already pinned at one end with
-    // its edge showing. A ScrollTrigger scoped to this section (same
-    // pattern as the arrow-draw animation below, and Gallery's rail pan)
-    // ties the pan directly to this section's own scroll-through instead.
     useEffect(() => {
         const strip = squiggleRef.current;
         const viewport = viewportRef.current;
@@ -211,13 +197,6 @@ export const About = () => {
 
         gsap.registerPlugin(ScrollTrigger);
 
-        // The strip is flex-centred inside the viewport (x: 0 shows it dead
-        // centre, with (scrollWidth - clientWidth) / 2 of hidden overlap on
-        // EACH side). So the furthest it can pan before exposing its edge is
-        // half that total overflow, not the whole thing -- panning the full
-        // amount overshoots past the safe range around the scroll midpoint,
-        // exposing a hard edge for the rest of the time the section is still
-        // in view. Halving it also reads as a slower, gentler drift overall.
         const amount = () => Math.max(0, (strip.scrollWidth - viewport.clientWidth) / 2);
         const xTo = gsap.quickTo(strip, "x", { duration: 0.5, ease: "power2.out" });
 
@@ -248,7 +227,6 @@ export const About = () => {
         </div>
         <h2 className={styles.title}>About</h2>
         <div className={styles.textContainer} ref={textContainerRef}>
-                {/* <img src={selfPortrait} alt="pic of me" className={styles.self_portrait} /> */}
                 <div className={styles.description}>
                     <h3 className={styles.intro}>Hello!</h3>
                     <div className={styles.descriptionText}>
@@ -328,36 +306,6 @@ export const About = () => {
 
                     <img src={SliceTop} ref={sliceTopRef} className={styles.slice_top}></img>
                     <img src={SliceBottom} ref={sliceBottomRef} className={styles.slice_bottom}></img>
-                    {/* <img src={Fig} className={styles.fig2} id="figNum2"></img> */}
-                    {/* <img src={Fig} className={styles.fig3} id="fig3"></img> */}
-                    {/* <div className={styles.education}>
-                        <h3>Education</h3>
-                        <p><span>High School diploma</span> majoring in Maths</p>
-                        <p><span>B.Sc. in Computer Science</span> at Constructor University (formerly Jacobs University)</p>
-                        <br></br>
-                    </div> */}
-
-                    {/* <img src={Cracker1} className={styles.cracker1} alt="cracker"></img> */}
-                    {/* <img src={Olive1} className={styles.olive1} alt="olive"></img> */}
-                    {/* <img src={Olive2} className={styles.olive2} alt="olive"></img> */}
-                    {/* <img src={Mozarella} className={styles.mozarella} alt="mozzarella"></img> */}
-                    {/* <div className={styles.experience}>
-                        <h3>Experience</h3>
-                        <p><span>Internship</span> at <a href="https://www.evn.mk/" target="_blank" rel="noopener noreferrer">EVN Macedonia</a></p>
-                        <p><span>Residential Engagement Assistant</span> at Constructor University</p>
-                        <p><span>Student Assistant</span> at Constructor University</p>
-                        <img src={Cracker2} className={styles.cracker2} alt="cracker"></img>
-                        <img src={Olive1} className={styles.olive3} alt="olive"></img>
-                        <img src={Olive2} className={styles.olive4} alt="olive"></img>
-                        <img src={Olive1} className={styles.olive5} alt="olive"></img>
-                    </div> */}
-                    {/* <div className={styles.accomp}>
-                            <h3>Accomplishments</h3>
-                            <p>Won 1st place for national essay competition - 
-                                represented North Macedonia at the <span>70th anniversary of the Council of Europe</span> in Strasbourg
-                            </p>
-                            <p><span>Student of the year</span> - was nominated by the university community for building a welcoming environment and organizing events</p>
-                    </div> */}
                 </div>
         </div>
         

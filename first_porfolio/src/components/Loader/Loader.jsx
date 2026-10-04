@@ -10,10 +10,6 @@ export const Loader = ({ progress = 0, fadingOut = false }) => {
   const clamped = Math.min(1, Math.max(0, progress));
   const percent = Math.round(clamped * 100);
 
-  // The loading screen's own illustration is three stacked PNGs -- without
-  // this they'd pop in on top of each other (cup, then liquid, then foam),
-  // which is exactly the layered-pop-in look this whole screen exists to
-  // avoid. Keep it invisible until all three have decoded.
   const [loadedLayers, setLoadedLayers] = useState(0);
   const cupReady = loadedLayers >= CUP_LAYERS;
   const onLayerLoad = () => setLoadedLayers((n) => n + 1);
@@ -29,8 +25,6 @@ export const Loader = ({ progress = 0, fadingOut = false }) => {
     >
       <div className={styles.card}>
         <div className={styles.cupStage}>
-          {/* Steam, rising over the cup. Kept separate from the spinning cup
-              below it so it drifts straight up instead of orbiting. */}
           <svg className={styles.steam} viewBox="0 0 220 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <g stroke="var(--maroon, #852736)" strokeWidth="4" strokeLinecap="round">
               <path className={styles.steam1} d="M80 60 C 72 46 88 38 80 22" />
@@ -39,9 +33,6 @@ export const Loader = ({ progress = 0, fadingOut = false }) => {
             </g>
           </svg>
 
-          {/* The coffee illustration itself -- cup, liquid surface and latte
-              art foam, the same three layers the Receipt page stacks, here
-              laid full-frame and spun like a dial while assets come in. */}
           <div className={`${styles.cup} ${cupReady ? styles.cupReady : ''}`}>
             <img src={CoffeeCup} className={styles.cupLayer} alt="" onLoad={onLayerLoad} />
             <img src={Coffee} className={styles.cupLayer} alt="" onLoad={onLayerLoad} />

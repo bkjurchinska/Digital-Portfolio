@@ -1,18 +1,9 @@
 import { useState } from 'react';
 import styles from './Menu.module.css';
 
-// Four "crafts" the mood-picker filters by. Every item below carries the
-// crafts it belongs to; picking one dims everything that isn't tagged with
-// it. About is tagged with all four -- it's relevant no matter what you're
-// here for, so it never dims.
 const MOODS = ['Programming', 'Web & UX Design', 'Graphic Design', 'Artwork', 'Games & Characters'];
 const ALL_MOODS = MOODS;
 
-// The whole menu, course by course, left column then right column -- same
-// grouping as the printed reference. Every item (whether it used to be a
-// "section" or a "subsection") is rendered identically: a title, a dotted
-// leader, a marker, and a one-line blurb. Clicking any of them just scrolls
-// to its section on the page -- `id` is that section's element id.
 const LEFT_COLUMN = [
     {
         course: 'Starter',
@@ -32,8 +23,6 @@ const LEFT_COLUMN = [
             {
                 title: 'RacoonFinds',
                 id: 'projects',
-                // Matches the carousel's slide order in Projects.jsx (egg,
-                // avocado, banana, blueberry) so a click lands on the right toast.
                 toastIndex: 0,
                 marker: '$$$',
                 moods: ['Web & UX Design'],
@@ -61,7 +50,6 @@ const LEFT_COLUMN = [
                 toastIndex: 3,
                 marker: '$$',
                 moods: ['Programming'],
-                // blurb: 'Coming soon',
             },
         ],
     },
@@ -76,21 +64,18 @@ const RIGHT_COLUMN = [
                 id: 'languages',
                 marker: '$$$',
                 moods: ['Artwork', 'Games & Characters'],
-                // blurb: 'Original characters pulled from odd references -- old toy collections turned into people, styles and eras.',
             },
             {
                 title: 'Posters',
                 id: 'languages',
                 marker: '$$',
                 moods: ['Graphic Design'],
-                // blurb: 'Posters made on the job as an REA, mostly in Canva.',
             },
             {
                 title: 'Tote Bags',
                 id: 'languages',
                 marker: '$',
                 moods: ['Graphic Design'],
-                // blurb: "A running catch-all for whatever doesn't fit the other plates yet.",
             },
         ],
     },
@@ -111,8 +96,6 @@ const RIGHT_COLUMN = [
         items: [
             {
                 title: 'Contact me',
-                // No `id` -- this opens the Receipt overlay instead of
-                // scrolling to a section (see `goTo`).
                 openReceipt: true,
                 marker: 'bill',
                 moods: ALL_MOODS,
@@ -122,14 +105,7 @@ const RIGHT_COLUMN = [
     },
 ];
 
-// How long the smooth scroll to the section takes, roughly -- the carousel
-// slide is kicked off after this so it reads as "arrive, then the toast
-// slides in" instead of both happening at once mid-scroll.
 const SCROLL_SETTLE_DELAY = 400;
-
-// Landing on #projects with a plain `block: 'start'` leaves the small
-// prev/next nav panel (it sits well below the carousel) just under the
-// fold. Nudge the scroll this many extra px past the title so it's visible.
 const PROJECTS_EXTRA_SCROLL = 120;
 
 const goTo = (item, onSelectProject, onOpenReceipt) => {
@@ -217,13 +193,6 @@ export const Menu = ({ onSelectProject, onOpenReceipt }) => {
                             </button>
                         ))}
                     </div>
-                    {/* <span className={styles.moodDivider} aria-hidden="true" /> */}
-                    {/* <p className={styles.moodRoute}>
-                        <strong>Your route</strong>{' '}
-                        {activeMood
-                            ? `Everything tagged "${activeMood}" is lit up below -- tap it again to clear.`
-                            : "Pick a craft and everything else dims out of the way."}
-                    </p> */}
                 </div>
             </div>
         </section>

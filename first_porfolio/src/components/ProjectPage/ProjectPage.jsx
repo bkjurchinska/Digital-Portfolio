@@ -7,8 +7,6 @@ import Andie from '../../assets/andie.svg';
 import AngryAndie from '../../assets/angryAndie.svg';
 import GameplayVideo from '../../assets/Gameplay-rec.mp4';
 
-// Every SVG dropped into assets/GameAssets, ordered by the number that prefixes
-// its filename (01-…, 02-…). New files show up on the strip automatically.
 const GAME_ASSETS = Object.entries(
     import.meta.glob('../../assets/GameAssets/*.svg', {
         eager: true,
@@ -22,32 +20,22 @@ const GAME_ASSETS = Object.entries(
     )
     .map(([, url]) => url);
 
-// Full-screen project view. `index` picks which of the four projects shows;
-// `onIndexChange` swaps to another (prev/next arrows, the thumbnail tabs, or the
-// left/right arrow keys); `onClose` dismisses it (button or Escape).
 export const ProjectPage = ({ index, onIndexChange, onClose }) => {
     const count = PROJECTS.length;
     const project = PROJECTS[index];
     const prev = PROJECTS[(index - 1 + count) % count];
     const next = PROJECTS[(index + 1) % count];
     const [lightboxSrc, setLightboxSrc] = useState(null);
-    // Every image the lightbox can show on this page, in view order: the gallery
-    // rows first, then the component belt on the 2D Game page. The prev/next
-    // arrows step through this whole list.
     const lightboxImages = [
         ...(project.gallery || []).flat(),
         ...(index === 2 ? GAME_ASSETS : []),
     ];
     const backdropRef = useRef(null);
 
-    // Every project opens scrolled to the top, including when switching between
-    // projects while the view stays mounted.
     useEffect(() => {
         backdropRef.current?.scrollTo(0, 0);
     }, [index]);
 
-    // Step through the lightbox images; wraps around. No-op if the open lightbox
-    // image isn't in the list.
     const stepLightbox = (dir) => {
         const i = lightboxImages.indexOf(lightboxSrc);
         if (i === -1) return;
@@ -72,15 +60,13 @@ export const ProjectPage = ({ index, onIndexChange, onClose }) => {
         };
         window.addEventListener('keydown', onKey);
         const bodyOverflow = document.body.style.overflow;
-        document.body.style.overflow = 'hidden';     // freeze the page behind
+        document.body.style.overflow = 'hidden';   
         return () => {
             window.removeEventListener('keydown', onKey);
             document.body.style.overflow = bodyOverflow;
         };
     }, [onClose, onIndexChange, count, lightboxSrc, index]);
 
-    // Full-bleed conveyor of the hand-drawn game components. `reverse` flips the
-    // travel direction so the two strips on the 2D Game page move opposite ways.
     const gameStrip = (reverse) => (
         <div className={styles.gameStripWrap} aria-label="Game components">
             <div className={`${styles.gameTrack} ${reverse ? styles.gameTrackReverse : ''}`}>
@@ -137,7 +123,6 @@ export const ProjectPage = ({ index, onIndexChange, onClose }) => {
                         <h1 className={styles.title}>{project.name}</h1>
                         <p className={styles.tagline}>{project.tagline}</p>
                         <p className={styles.tools}>{project.tools}</p>
-                        {/* <p className={styles.body}>{project.description}</p> */}
                     </div>
                     <div className={styles.right}>
                         {project.mainImage ? (
@@ -278,8 +263,6 @@ export const ProjectPage = ({ index, onIndexChange, onClose }) => {
                     <div className={styles.bookingVideos}>
                         <iframe
                             className={styles.bookingVideo}
-                            // autoplay=1 + mute=1: browsers only allow autoplay when muted,
-                            // unmuted won't play without a click no matter what's set here.
                             src="https://www.youtube.com/embed/UjsjpQSKxj0?autoplay=1&mute=1&playsinline=1"
                             title="Booking app demo A"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

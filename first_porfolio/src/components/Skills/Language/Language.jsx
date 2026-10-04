@@ -110,29 +110,20 @@ const lidRef = useRef(null);
 const rollRef = useRef(null);
 const viewportRef = useRef(null);
 const squiggleRef = useRef(null);
-const g1 = useGlassLight(1337, 254);   // Sardine1 text overlay
-const g2 = useGlassLight(1044, 225);   // Sardine2 text overlay
-const g3 = useGlassLight(1062, 208);   // Sardine3 text overlay
+const g1 = useGlassLight(1337, 254);   //sardine1 text
+const g2 = useGlassLight(1044, 225);   //sardine2 text
+const g3 = useGlassLight(1062, 208);   //sardine3 text
 
 const [isOpen, setIsOpen] = useState(false);
-const preview1 = useHoverIntent();   // delayed hover state for Sardine1's photo preview
-const preview2 = useHoverIntent();   // ... Sardine2
-const preview3 = useHoverIntent();   // ... Sardine3
+const preview1 = useHoverIntent();   
+const preview2 = useHoverIntent();   
+const preview3 = useHoverIntent();   
 
-// Wave strip behind the tin drifts horizontally as the user scrolls -- same
-// idea as the background blob in the About section. Its x is mapped straight
-// from how far the section has travelled through the viewport (not an
-// accumulating delta), so it always tracks the scroll position, drifts back
-// when you scroll up, and never gets stuck pinned at one edge.
 useEffect(() => {
     const strip = squiggleRef.current;
-    const viewport = viewportRef.current;   // spans the section's full height
+    const viewport = viewportRef.current;  
     if (!strip || !viewport) return;
 
-    // Widest the (much wider than the window) shape can move while its side
-    // edges stay clipped. Recomputed lazily because the SVG often lays out a
-    // frame or two after this effect first runs -- that late measurement is
-    // exactly what used to be missed, leaving the wave frozen.
     let amp = 0;
     const measure = () => {
         amp = Math.max(0, (strip.scrollWidth - viewport.clientWidth) / 2 - 4);
@@ -147,7 +138,6 @@ useEffect(() => {
         if (!amp) return;
         const r = viewport.getBoundingClientRect();
         const vh = window.innerHeight || 1;
-        // 0 as the section enters from the bottom, 1 as it leaves past the top
         const p = gsap.utils.clamp(0, 1, (vh - r.top) / (vh + r.height));
         xTo((p * 2 - 1) * amp * 0.6);
     };
@@ -160,7 +150,7 @@ useEffect(() => {
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize);
     if (!strip.complete) strip.addEventListener("load", onLoad);
-    const settle = setTimeout(onResize, 400);   // catch a late layout pass
+    const settle = setTimeout(onResize, 400);
 
     return () => {
         window.removeEventListener("scroll", onScroll);
@@ -174,10 +164,6 @@ useEffect(() => {
 useEffect(() => {
     const lid = lidRef.current;
     if (!lid) return;
-    // Nudge clip-path by a hair on mount to force the browser to
-    // promote the compositing layer and do its first paint now,
-    // while nothing depends on timing -- so the real click-driven
-    // transition later doesn't eat a frame on setup.
     requestAnimationFrame(() => {
         lid.style.clipPath = "inset(0 0.01% 0 0)";
         requestAnimationFrame(() => {
@@ -186,9 +172,6 @@ useEffect(() => {
     });
 }, []);
 
-// Click the lid -> its right half is clipped away (revealing the open tin)
-// while the key bar rolls left. Click again to close. `isOpen` here is the
-// state *before* this toggle.
 const handleClick = () => {
     const lid = lidRef.current;
     const roll = rollRef.current;
@@ -205,9 +188,6 @@ const handleClick = () => {
     setIsOpen(!isOpen);
 };
 
-// Clicking a fish: the first click just opens the tin; once it's open, the fish
-// scales up, drifts up and fades -- then that Design page swells in where it
-// left off, so the sardine reads as "turning into" the page.
 const openDesignFor = (n) => (e) => {
     e.stopPropagation();
     if (!isOpen) {
@@ -217,10 +197,7 @@ const openDesignFor = (n) => (e) => {
     const fish = e.currentTarget;
     gsap.killTweensOf(fish);
     gsap.to(fish, { scale: 1.45, y: -190, opacity: 0, duration: 0.55, ease: 'power2.in' });
-    // Open the page slightly before the fish is gone, so the two crossfade -- the
-    // page swells in through the last of the fading sardine.
     gsap.delayedCall(0.32, () => onOpenDesign?.(n));
-    // Page fully covers the screen by ~0.8s; restore the fish for when it closes.
     gsap.delayedCall(0.9, () => gsap.set(fish, { clearProps: 'transform,opacity' }));
 };
 
@@ -231,26 +208,17 @@ const openDesignFor = (n) => (e) => {
         <h1 id="languages" className={styles.title}>Design</h1>
         <div className={styles.sardineContainer}>
             <img src={SardineCan} className={styles.can} onClick={handleClick} alt="open sardine tin" />
-            {/* The three fish sit above the can but below the lid/key, so the
-                closed lid hides them. On open they slide right by different
-                distances (Sardine2 goes furthest); on close they slide back in. */}
-            {/* Sardine1 + its glassy "written on" text -- same effect as Sardine3. */}
             <div className={`${styles.sardine1} ${preview1.on ? styles.previewOn : ""}`}
                  style={{
                      transform: isOpen ? "translateX(24vw) rotate(-7deg)" : "translateX(0) rotate(0deg)",
-                     zIndex: preview1.on ? 30 : undefined,   // lift the whole fish (+ photos) above the lid/key on hover
+                     zIndex: preview1.on ? 30 : undefined,   
                  }}>
-                {/* Photo preview: stacked behind the fish, fans out on hover and
-                    sits on top of everything (see .previewPhoto in the CSS).
-                    Non-interactive so it never steals the hover from the fish. */}
                 <div className={styles.previewScatter} aria-hidden="true">
                     {previews.map((p, i) => (
                         <img key={i} src={p.src} className={styles.previewPhoto} alt=""
                              style={{ "--x": p.x, "--y": p.y, "--r": p.r, "--w": p.w, "--i": i }} />
                     ))}
                 </div>
-                {/* fish + its "written on" text share this wrapper so the hover
-                    pop (scale/lift/tilt) moves them together */}
                 <div className={styles.sardine1Inner}>
                 <img src={Sardine1} className={styles.sardine1Fish} alt="" aria-hidden="true"
                      onClick={openDesignFor(0)}
@@ -307,14 +275,11 @@ const openDesignFor = (n) => (e) => {
                       </g>
                     </defs>
 
-                    {/* static glass (hover is handled on the fish image itself) */}
                     <use href="#s1glyphs" filter="url(#glossyGlass1)" />
-                    {/* soft light that follows the cursor, fades in on hover */}
                     <use href="#s1glyphs" ref={g1.glowRef} className={styles.cursorGlow} filter="url(#cursorLight1)" />
                 </svg>
                 </div>
             </div>
-            {/* Sardine2 + its glassy "written on" text -- same effect as Sardine3. */}
             <div className={`${styles.sardine2} ${preview2.on ? styles.previewOn : ""}`}
                  style={{
                      transform: isOpen ? "translateX(41vw) rotate(5deg)" : "translateX(0) rotate(0deg)",
@@ -382,18 +347,11 @@ const openDesignFor = (n) => (e) => {
                       </g>
                     </defs>
 
-                    {/* static glass (hover is handled on the fish image itself) */}
                     <use href="#s2glyphs" filter="url(#glossyGlass2)" />
-                    {/* soft light that follows the cursor, fades in on hover */}
                     <use href="#s2glyphs" ref={g2.glowRef} className={styles.cursorGlow} filter="url(#cursorLight2)" />
                 </svg>
                 </div>
             </div>
-            {/* Sardine3 + its "written on" text share one wrapper, so the
-                transform moves them together as one element. The letterforms
-                live once in <defs id="s3glyphs"> and are <use>d twice: the
-                static glossy glass, then a point-light glow that tracks the
-                cursor on hover (see handleGlass* above). */}
             <div className={`${styles.sardine3} ${preview3.on ? styles.previewOn : ""}`}
                  style={{
                      transform: isOpen ? "translateX(14vw) rotate(9deg)" : "translateX(0) rotate(0deg)",
@@ -444,7 +402,6 @@ const openDesignFor = (n) => (e) => {
                       </filter>
 
                       <filter id="cursorLight" x="-70%" y="-140%" width="240%" height="380%" color-interpolation-filters="sRGB">
-                        {/* very smooth surface -> the reflection pools and spreads like water */}
                         <feGaussianBlur in="SourceAlpha" stdDeviation="12" result="lbump"/>
                         <feSpecularLighting in="lbump" surfaceScale="50" specularConstant="24" specularExponent="20" lighting-color="#ffffff" result="lspec">
                           <fePointLight ref={g3.pointLightRef} x="531" y="104" z="95"/>
@@ -466,9 +423,7 @@ const openDesignFor = (n) => (e) => {
                       </g>
                     </defs>
 
-                    {/* static glass (hover is handled on the fish image itself) */}
                     <use href="#s3glyphs" filter="url(#glossyGlass)" />
-                    {/* soft light that follows the cursor, fades in on hover */}
                     <use href="#s3glyphs" ref={g3.glowRef} className={styles.cursorGlow} filter="url(#cursorLight)" />
                 </svg>
                 </div>

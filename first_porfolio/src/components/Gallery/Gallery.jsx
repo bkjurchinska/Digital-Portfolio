@@ -5,23 +5,16 @@ import styles from './Gallery.module.css';
 import { GALLERY } from './galleryData';
 import PictureFrame from '../../assets/picture-frame.png';
 
-// How many empty tiles to show while GALLERY has no images yet.
 const PLACEHOLDER_COUNT = 9;
 
-// Full-screen Gallery view, reached by clicking the printed ticket in the
-// "Chef's Specials" section. `onClose` dismisses it (button or Escape).
-// `onOpenReceipt` is threaded down from App via Skills/Paintings, same as the
-// "Get receipt and pay" button there.
 export const Gallery = ({ onClose, onOpenReceipt }) => {
     const items = GALLERY;
-    const [lightbox, setLightbox] = useState(null);   // index into items, or null
+    const [lightbox, setLightbox] = useState(null);  
     const backdropRef = useRef(null);
-    const trackRef = useRef(null);      // tall spacer -> vertical scroll = pan distance
-    const viewportRef = useRef(null);   // clipped window
-    const railRef = useRef(null);       // the row that slides sideways
-    const outroRef = useRef(null);      // "Go back" block, right after the rail
-    // Once the outro (with its own "Go back" button) scrolls into view, the X
-    // is redundant -- hide it so there's only one way back.
+    const trackRef = useRef(null);     
+    const viewportRef = useRef(null); 
+    const railRef = useRef(null);  
+    const outroRef = useRef(null);  
     const [atOutro, setAtOutro] = useState(false);
 
     useEffect(() => {
@@ -41,12 +34,6 @@ export const Gallery = ({ onClose, onOpenReceipt }) => {
         return () => observer.disconnect();
     }, []);
 
-    // Smooth horizontal scroll. The "pinning" is pure CSS: .railStage is
-    // position:sticky, so it's held by the compositor with zero per-frame JS
-    // (no jittery transform-pin). ScrollTrigger only reports how far through the
-    // tall .railTrack we've scrolled, and gsap.quickTo eases the row's x toward
-    // that target -- so choppy wheel steps come out as one continuous glide.
-    // Scrolling happens inside .backdrop, so it's the scroller (not window).
     useEffect(() => {
         const scroller = backdropRef.current;
         const track = trackRef.current;
@@ -75,7 +62,6 @@ export const Gallery = ({ onClose, onOpenReceipt }) => {
             onUpdate: (self) => xTo(-amount() * self.progress),
         });
 
-        // The overlay animates in; re-measure once it (and any images) settle.
         const refresh = () => { sizeTrack(); st.refresh(); };
         const raf = requestAnimationFrame(refresh);
         const settle = setTimeout(refresh, 500);
@@ -111,7 +97,7 @@ export const Gallery = ({ onClose, onOpenReceipt }) => {
         };
         window.addEventListener('keydown', onKey);
         const bodyOverflow = document.body.style.overflow;
-        document.body.style.overflow = 'hidden';   // freeze the page behind
+        document.body.style.overflow = 'hidden';   // freeze page behind
         return () => {
             window.removeEventListener('keydown', onKey);
             document.body.style.overflow = bodyOverflow;
@@ -178,8 +164,6 @@ export const Gallery = ({ onClose, onOpenReceipt }) => {
                 </div>
             </div>
 
-            {/* Sits right after the tall scroll-jacked rail, so it only comes into
-                view once the user has scrolled all the way through the pictures. */}
             <div className={styles.outro} ref={outroRef}>
                 <p className={styles.footnote}>
                     * A lot of these designs aren't originally mine, I found the reference online. But every piece was painted by hand by me.

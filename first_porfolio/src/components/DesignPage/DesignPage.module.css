@@ -1,8 +1,5 @@
 @import '../../vars.css';
 
-/* --accent is set per design via inline style on .backdrop.
-   The page matches the deep-blue band behind the sardines in the Design
-   section, so all copy sits in a light blue-white ink. */
 .backdrop{
     position: fixed;
     inset: 0;
@@ -16,8 +13,6 @@
     --ink-faint: rgba(234, 240, 255, 0.4);
     color: var(--ink);
     font-family: var(--font-thin, 'Raleway', Helvetica, sans-serif);
-    /* Grows in from the upper area, picking up where the sardine faded up to --
-       reads as the fish "becoming" the page. */
     transform-origin: 50% 18%;
     animation: backdropIn 0.5s cubic-bezier(0.16, 0.84, 0.3, 1);
 }
@@ -34,13 +29,12 @@
 .inner{
     max-width: 1100px;
     margin: 0 auto;
-    padding: 6rem 1.5vw 14vh;   /* top pad clears the fixed .header */
+    padding: 6rem 1.5vw 14vh;  
     display: flex;
     flex-direction: column;
     gap: 2.4rem;
 }
 
-/* Top bar: the three pages as a plain text list. */
 .header{
     position: fixed;
     top: 0;
@@ -139,7 +133,6 @@
     text-transform: uppercase;
     color: var(--ink-dim);
 }
-/* The title is the sardine's "written on glass" SVG -- hover it for the sheen. */
 .title{
     margin: 0;
     line-height: 1;
@@ -162,9 +155,6 @@
     font-family: var(--font-thin), Helvetica;
 }
 
-/* Gallery: three across, spanning nearly the whole screen with a small inset on
-   the sides and a 10px gutter between tiles. Drop images into the data file and
-   they lay out here automatically. */
 .gallery{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -181,19 +171,18 @@
     padding: 0;
     border: none;
     background: transparent;
-    overflow: hidden;                 /* trims a taller poster top & bottom */
+    overflow: hidden;                
     cursor: zoom-in;
     display: block;
-    aspect-ratio: 3 / 4;              /* uniform tiles so rows line up */
+    aspect-ratio: 3 / 4;             
     transition: transform 0.2s ease;
 }
 .tile:hover{ transform: scale(1.01); z-index: 1; }
-/* A lone poster left over on its own row sits centered instead of stuck left. */
 .tile:last-child:nth-child(3n + 1){ grid-column: 2; }
 .tileImage{
     width: 100%;
     height: 100%;
-    object-fit: cover;               /* fill the tile, cropping the overhang */
+    object-fit: cover;              
     display: block;
 }
 .tilePlaceholder{
@@ -218,9 +207,7 @@
     .gallery{ grid-template-columns: 1fr; }
 }
 
-/* Sub-sections (Characters page): a stack of titled blocks, each split off by a
-   hairline. Under the heading, a character "card" on the left and a small image
-   grid on the right. Stays inside the reading column (not full-bleed). */
+
 .sections{
     display: flex;
     flex-direction: column;
@@ -248,9 +235,6 @@
     align-items: start;
 }
 
-/* the character card -- an intro line plus a stack of label / value rows.
-   --cardColor comes from the section data (designData.js); falls back to the
-   faint blue tint when a section doesn't set one. */
 .card{
     display: flex;
     flex-direction: column;
@@ -260,8 +244,6 @@
     border-radius: 14px;
     background-color: var(--cardColor, rgba(234, 240, 255, 0.06));
 }
-/* a section that sets its own (pale) --cardColor gets dark ink so the card
-   text stays readable -- overrides the light ink for everything inside it */
 .cardTinted{
     --ink: #262f5c;
     --ink-dim: rgba(38, 47, 92, 0.72);
@@ -285,7 +267,6 @@
     font-family: var(--font-thin), Helvetica;
 }
 
-/* Small accent rectangle between the title and the bullets: the species. */
 .cardSpecies{
     display: grid;
     justify-items: center;
@@ -296,8 +277,6 @@
     background-color: var(--accent);
     color: #0e2731;
 }
-/* Sits directly behind the icon (same grid cell, lower z-index) -- big and a
-   shade darker than the section's accent so it reads as a bold watermark. */
 .cardSpeciesValue{
     grid-column: 1;
     grid-row: 1;
@@ -308,7 +287,6 @@
     text-align: center;
     white-space: nowrap;
     color: #6585dc;
-    /* color: color-mix(in srgb, var(--accent) 60%, rgb(23, 0, 128)); */
 }
 .cardSpeciesIcon{
     grid-column: 1;
@@ -319,15 +297,12 @@
     object-fit: contain;
 }
 
-/* Top half of the card: the star bullet list. */
 .cardTop{
     display: flex;
     flex-direction: column;
     gap: 0.6rem;
 }
 
-/* Bottom half: a solid rectangle in the title-letter colour (the page
-   --accent), holding the description + the strengths paragraph. */
 .cardBottom{
     display: flex;
     flex-direction: column;
@@ -336,7 +311,7 @@
     padding: 1rem 1.05rem 1.1rem;
     border-radius: 12px;
     background-color: var(--accent);
-    color: #0e2731;                 /* dark ink -- readable on the cyan accent */
+    color: #0e2731;    
 }
 .cardStrength{
     margin: 0;
@@ -384,7 +359,6 @@
     gap: 10px;
 }
 
-/* Plain sections (Tote Bags): no character card, just a blurb above a gallery. */
 .sectionSimple{
     display: flex;
     flex-direction: column;
@@ -412,10 +386,6 @@
     color: var(--ink-dim);
     font-family: var(--font-thin), Helvetica;
 }
-/* Plain-section gallery (Tote Bags): the hero shot on the left, shown at its
-   own natural size, with the rest stacked in a column beside it -- each
-   cropped top/bottom (object-fit: cover) so the pair together match the
-   hero's height. */
 .sectionSimple .sectionGallery{
     display: flex;
     align-items: stretch;
@@ -458,7 +428,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: bottom;   /* keep the bag design (lower half of the mockup) in frame */
+    object-position: bottom; 
 }
 @media (max-width: 720px){
     .sectionSimple .sectionGallery{ flex-direction: column; }
@@ -466,16 +436,9 @@
     .sectionSimple .tileSide{ aspect-ratio: 4 / 3; }
 }
 
-/* "feature" gallery (Roman Warrior Bunny): two independent columns -- a narrower
-   left one (Shield on top, Action pose right under it) and a wider right one (the
-   big full-body image on top, headshots strip right under it, matching its
-   width). Each column is its own flex stack, so the short left pair packs tight
-   with no gap regardless of how tall the right column is. Images keep their
-   natural width/height -- nothing stretched or cropped.
-   Array order: [FB_Bunny, Shield, A_Bunny, HS_Bunny]. */
 .sectionRowFeature{ align-items: start; }
 .sectionGalleryFeature{
-    grid-template-columns: 2fr 3fr;   /* left smaller, right bigger */
+    grid-template-columns: 2fr 3fr; 
     align-items: start;
 }
 .featCol{
@@ -485,11 +448,11 @@
     min-width: 0;
 }
 .sectionGalleryFeature .tile{
-    aspect-ratio: auto;          /* size to the image, not a fixed 3:4 box */
+    aspect-ratio: auto;    
     overflow: visible;
 }
 .sectionGalleryFeature .tileImage{
-    height: auto;                /* natural height */
+    height: auto; 
     object-fit: contain;
 }
 
@@ -504,7 +467,6 @@
     .sectionGallery{ grid-template-columns: 1fr; }
 }
 
-/* Prev / next between the three pages */
 .pager{
     display: flex;
     justify-content: space-between;
@@ -558,7 +520,7 @@
 }
 .lightboxImage{
     max-width: 100%;
-    max-height: 85vh;      /* fits within the viewport -- no scrolling to see it all */
+    max-height: 85vh; 
     width: auto;
     height: auto;
     margin: auto;

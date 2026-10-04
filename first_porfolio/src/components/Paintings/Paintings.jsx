@@ -8,18 +8,9 @@ gsap.registerPlugin(ScrambleTextPlugin);
 
 const CTA_TEXT = 'Tap the ticket to enter';
 
-// Barcode bar widths (px), same fixed pattern as the reference artboard
-// (assets/The Journey's End.dc.html).
 const BARS = Array.from({ length: 34 }, (_, i) => [1, 2, 3, 2, 4, 1, 2][i % 7]);
 
-// Closing section ("Chef's Specials"). Layout + typography follow the
-// "The Journey's End" canvas: a settled-bill header strip, the send-off copy
-// and a "print" button on the left, and a minimal ticket printer on the right
-// that ejects an entrance ticket. Clicking the ticket opens the Gallery.
-//
-// `onOpenGallery` / `onOpenReceipt` are threaded down from App via Skills.
 export const Paintings = ({ onOpenGallery, onOpenReceipt }) => {
-    // idle -> printing (ticket sliding out) -> ready (ticket clickable)
     const [phase, setPhase] = useState('idle');
     const [count, setCount] = useState(0);
     const timerRef = useRef(0);
@@ -36,8 +27,6 @@ export const Paintings = ({ onOpenGallery, onOpenReceipt }) => {
     );
     const worksLabel = `${GALLERY.length || 24} works`;
 
-    // Scatter the ticket's call-to-action in, character by character -- the same
-    // ScrambleTextPlugin effect the copy beside the plate in "Projects" uses.
     useEffect(() => {
         if (phase !== 'ready' || !ctaRef.current) return;
         const tween = gsap.to(ctaRef.current, {
@@ -52,7 +41,6 @@ export const Paintings = ({ onOpenGallery, onOpenReceipt }) => {
     const feed = () => {
         setCount((c) => c + 1);
         setPhase('printing');
-        // let the slide-out finish before the ticket becomes clickable
         timerRef.current = setTimeout(() => setPhase('ready'), 1450);
     };
 
@@ -60,7 +48,6 @@ export const Paintings = ({ onOpenGallery, onOpenReceipt }) => {
         if (phase === 'printing') return;
         clearTimeout(timerRef.current);
         if (phase === 'ready') {
-            // Pull the old ticket back up into the printer, then feed a new one.
             setPhase('idle');
             timerRef.current = setTimeout(feed, 620);
         } else {
@@ -132,7 +119,6 @@ export const Paintings = ({ onOpenGallery, onOpenReceipt }) => {
                                                 <span className={styles.ticketVenue}>The Gallery</span>
                                                 <span className={styles.ticketMeta}>{todayLabel} · {worksLabel}</span>
                                             </span>
-                                            {/* <span className={styles.thumb} aria-hidden="true">Art</span> */}
                                         </span>
 
                                         <span className={styles.barcode} aria-hidden="true">
@@ -151,8 +137,6 @@ export const Paintings = ({ onOpenGallery, onOpenReceipt }) => {
                         </div>
                         {!printed && (
                             <div className={styles.placeholder}>
-                                {/* <span className={styles.placeholderBar} aria-hidden="true" /> */}
-                                {/* <span className={styles.placeholderText}>Your ticket prints here</span> */}
                             </div>
                         )}
                     </div>

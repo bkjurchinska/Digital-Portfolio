@@ -1,9 +1,5 @@
 import React, {useRef} from 'react';
 import styles from './Carousel.module.css';
-// import Jam1 from '../../assets/jam1.png';
-// import Jam2 from '../../assets/jam2.png';
-// import Jam3 from '../../assets/jam3.png';
-// import Jam4 from '../../assets/jam4.png';
 import Toast1 from '../../assets/egg-toast.png';
 import Toast2 from '../../assets/avocado-toast.png';
 import Toast3 from '../../assets/banana-toast.png';
